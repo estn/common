@@ -1,0 +1,7 @@
+server:
+  port: ${random.int[1000,1999]}
+spring:
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
