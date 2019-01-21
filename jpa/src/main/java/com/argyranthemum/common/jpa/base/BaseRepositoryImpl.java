@@ -6,6 +6,9 @@ import com.argyranthemum.common.domain.pojo.DomainCursor;
 import com.argyranthemum.common.domain.pojo.DomainPage;
 import com.argyranthemum.common.jpa.condition.*;
 import com.google.common.collect.Lists;
+import com.sun.istack.internal.NotNull;
+import org.springframework.lang.NonNullApi;
+import org.springframework.lang.Nullable;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -18,9 +21,9 @@ import java.util.Optional;
 /**
  * BaseRepository只实现CRUD中的方法
  * <p>
- * JpaRepositoryImplementation中的方法不实现. 实际情况中不会使用
+ * JpaRepositoryImplementation中的方法不实现. 实际中不应使用
  *
- * @param <T>  实体类型
+ * @param <T>  实体类型. 应该继承自 com.argyranthemum.common.domain.BaseDomain
  * @param <ID> 主键ID类型
  */
 public class BaseRepositoryImpl<T, ID extends Serializable> extends AbstractBaseRepositoryImpl<T, ID> {
@@ -190,19 +193,19 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends AbstractBase
             return "";
         }
 
-        String whereString = "";
+        StringBuilder whereString = new StringBuilder();
 
         int position = 1;
         for (Where where : wheres) {
             if (where.getOperation().equals(Operation.IS_NULL) || where.getOperation().equals(Operation.IS_NOT_NULL)) {
-                whereString = whereString + " AND c." + where.getField() + " " + where.getOperation().getValue();
+                whereString.append(" AND c.").append(where.getField()).append(" ").append(where.getOperation().getValue());
                 continue;
             }
-            whereString = whereString + " AND c." + where.getField() + " " + where.getOperation().getValue() + " ?" + position;
+            whereString.append(" AND c.").append(where.getField()).append(" ").append(where.getOperation().getValue()).append(" ?").append(position);
             position++;
         }
 
-        return whereString;
+        return whereString.toString();
     }
 
     private String getOrders(SQL sql) {

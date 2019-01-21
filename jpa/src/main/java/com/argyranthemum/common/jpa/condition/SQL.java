@@ -13,15 +13,33 @@ import java.util.List;
  */
 public class SQL {
 
+    /**
+     * 查询列
+     */
     private List<String> selects;
 
+    /**
+     * 查询条件集合
+     */
     private List<Where> wheres;
 
+    /**
+     * 排序字段
+     */
     private List<Order> orders;
 
+    /**
+     * 分组字段
+     */
     private List<Group> groups;
 
-    private Boolean available;
+    /**
+     * 是否查询只查询可用字段
+     * 默认:true
+     * true:只查询available=AVAILABLE的数据
+     * false:查询全部的数据available=[AVAILABLE,UNAVAILABLE]
+     */
+    private Boolean available = true;
 
     SQL() {
     }
