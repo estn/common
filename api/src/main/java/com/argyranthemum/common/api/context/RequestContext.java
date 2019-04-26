@@ -2,11 +2,16 @@ package com.argyranthemum.common.api.context;
 
 import com.argyranthemum.common.core.pojo.Platform;
 import com.argyranthemum.common.core.pojo.Version;
+import com.argyranthemum.common.core.support.SignSupport;
+import com.argyranthemum.common.core.util.encrypt.MD5Util;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.NamedThreadLocal;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.Map;
 
 
 /**

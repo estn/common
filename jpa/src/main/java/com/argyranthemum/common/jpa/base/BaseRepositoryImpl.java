@@ -6,9 +6,6 @@ import com.argyranthemum.common.domain.pojo.DomainCursor;
 import com.argyranthemum.common.domain.pojo.DomainPage;
 import com.argyranthemum.common.jpa.condition.*;
 import com.google.common.collect.Lists;
-import com.sun.istack.internal.NotNull;
-import org.springframework.lang.NonNullApi;
-import org.springframework.lang.Nullable;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
