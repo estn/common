@@ -21,6 +21,14 @@ public interface BaseRepository<T, ID extends Serializable> extends CrudReposito
     T update(T entity);
 
     /**
+     * 合并实体
+     *
+     * @param entity 实体
+     * @return
+     */
+    T merge(T entity);
+
+    /**
      * 刷新实体
      *
      * @param entity 实体
@@ -40,7 +48,7 @@ public interface BaseRepository<T, ID extends Serializable> extends CrudReposito
      * 分页查询数据
      *
      * @param sql       查询条件
-     * @param pageIndex 页码. 从0开始
+     * @param pageIndex 页码. 从1开始
      * @param pageSize  每页数量
      * @return DomainPage
      */

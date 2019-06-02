@@ -1,9 +1,17 @@
 package com.argyranthemum.common.domain;
 
 
-import com.argyranthemum.common.domain.enumeration.AvailableEnum;
+import com.argyranthemum.common.core.enums.AvailableEnum;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.Date;
 import java.util.UUID;
 

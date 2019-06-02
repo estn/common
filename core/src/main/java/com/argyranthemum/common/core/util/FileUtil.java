@@ -99,7 +99,7 @@ public class FileUtil {
      * @return
      */
     public static String saveFile(String base64) {
-        String filename = UUIDUtil.randomWithoutBar();
+        String filename = UUIDUtil.random();
         String path = doFetchPath(filename);
         String absolutelyPath = getAbsolutelyPath(path);
         base64 = Base64FileSupport.replaceBase64Prefix(base64);
@@ -116,7 +116,7 @@ public class FileUtil {
      * @return
      */
     public static String saveFile(byte[] bytes, String extension) {
-        String filename = UUIDUtil.randomWithoutBar();
+        String filename = UUIDUtil.random();
         String path = doFetchPath(filename);
         String absolutelyPath = getAbsolutelyPath(path);
 
@@ -145,7 +145,7 @@ public class FileUtil {
             if (file == null || file.length() == 0) {
                 return null;
             }
-            String filename = UUIDUtil.randomWithoutBar();
+            String filename = UUIDUtil.random();
             String path = doFetchPath(filename);
             String absolutelyPath = getAbsolutelyPath(path);
 

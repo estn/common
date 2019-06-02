@@ -4,7 +4,7 @@
  */
 package com.argyranthemum.common.domain;
 
-import com.argyranthemum.common.domain.enumeration.AvailableEnum;
+import com.argyranthemum.common.core.enums.AvailableEnum;
 import org.junit.Assert;
 import org.junit.Test;
 

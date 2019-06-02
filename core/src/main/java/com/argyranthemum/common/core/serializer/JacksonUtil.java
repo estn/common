@@ -1,10 +1,12 @@
 package com.argyranthemum.common.core.serializer;
 
+import com.argyranthemum.common.core.enums.BooleanEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +33,11 @@ public class JacksonUtil extends ObjectMapper {
 
         // 时间格式化输出
         setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+
+        //针对特殊的字段进行设置序列化
+        SimpleModule simpleModule = new SimpleModule();
+        simpleModule.addSerializer(BooleanEnum.class, new BooleanEnumSerializer());
+        this.registerModule(simpleModule);
     }
 
     public static JacksonUtil getInstance() {

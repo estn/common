@@ -135,5 +135,12 @@ public class ArithmeticUtil {
         return b1.divide(b2, scale, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
+    /**
+     * 两个Double是否相等
+     */
+    public static Boolean equals(double v1, double v2) {
+        return Double.doubleToLongBits(v1) == Double.doubleToLongBits(v2);
+    }
+
 
 }

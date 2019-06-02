@@ -6,6 +6,7 @@ import com.argyranthemum.common.core.exception.DefaultError;
 import com.argyranthemum.common.core.serializer.JacksonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver;
 
@@ -54,6 +55,9 @@ public class ServerExceptionResolver extends AbstractHandlerExceptionResolver {
         else if (ex instanceof AccessDeniedException) {
             response.setCode(DefaultError.ACCESS_DENIED_ERROR.getErrorCode());
             response.setData(DefaultError.ACCESS_DENIED_ERROR.getErrorMessage());
+        } else if (ex instanceof HttpRequestMethodNotSupportedException) {
+            response.setCode(DefaultError.METHOD_NOT_SUPPORTED_ERROR.getErrorCode());
+            response.setData(DefaultError.METHOD_NOT_SUPPORTED_ERROR.getErrorMessage());
         }
         // 系统自带异常，主要指JVM抛出的异常
         else {

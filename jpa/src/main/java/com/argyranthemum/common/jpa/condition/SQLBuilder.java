@@ -33,7 +33,7 @@ public class SQLBuilder {
         this.available = true;
     }
 
-    public static SQLBuilder instance() {
+    public static SQLBuilder builder() {
         return new SQLBuilder();
     }
 

@@ -1,6 +1,5 @@
 package com.argyranthemum.common.api.config;
 
-import com.argyranthemum.common.api.context.RequestContextInterceptor;
 import com.argyranthemum.common.api.convert.JacksonObjectMapperHttpMessageConvert;
 import com.argyranthemum.common.api.exception.ServerExceptionResolver;
 import com.argyranthemum.common.api.formatter.StringToDateFormatter;
@@ -16,7 +15,6 @@ public class WebMvcConfigurerSupport implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new RequestContextInterceptor()).addPathPatterns("/**");
     }
 
     /**

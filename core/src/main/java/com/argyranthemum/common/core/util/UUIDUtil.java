@@ -17,8 +17,12 @@ public class UUIDUtil {
      *
      * @return
      */
-    public static String randomUUID() {
-        return UUID.randomUUID().toString();
+    public static String random() {
+        String uuid = UUID.randomUUID().toString();
+        return uuid.substring(0, 8) + uuid.substring(9, 13)
+                + uuid.substring(14, 18) + uuid.substring(19, 23)
+                + uuid.substring(24);
+
     }
 
     /**
@@ -26,11 +30,8 @@ public class UUIDUtil {
      *
      * @return 无中划线的UUID字符串
      */
-    public static String randomWithoutBar() {
-        String uuid = UUID.randomUUID().toString();
-        return uuid.substring(0, 8) + uuid.substring(9, 13)
-                + uuid.substring(14, 18) + uuid.substring(19, 23)
-                + uuid.substring(24);
+    public static String uuid() {
+        return UUID.randomUUID().toString();
     }
 
     /**

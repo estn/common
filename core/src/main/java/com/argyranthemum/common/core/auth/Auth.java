@@ -1,4 +1,4 @@
-package com.argyranthemum.common.core.annotation;
+package com.argyranthemum.common.core.auth;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

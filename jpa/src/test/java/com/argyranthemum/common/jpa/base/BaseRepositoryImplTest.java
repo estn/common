@@ -4,11 +4,15 @@
  */
 package com.argyranthemum.common.jpa.base;
 
-import com.argyranthemum.common.domain.enumeration.AvailableEnum;
+import com.argyranthemum.common.core.enums.AvailableEnum;
 import com.argyranthemum.common.domain.pojo.DomainCursor;
 import com.argyranthemum.common.domain.pojo.DomainPage;
 import com.argyranthemum.common.jpa.ApplicationTests;
-import com.argyranthemum.common.jpa.condition.*;
+import com.argyranthemum.common.jpa.condition.Operation;
+import com.argyranthemum.common.jpa.condition.OrderBy;
+import com.argyranthemum.common.jpa.condition.SQL;
+import com.argyranthemum.common.jpa.condition.SQLBuilder;
+import com.argyranthemum.common.jpa.condition.Where;
 import com.argyranthemum.common.jpa.entity.Article;
 import com.argyranthemum.common.jpa.repo.ArticleRepository;
 import com.google.common.collect.Lists;
@@ -102,7 +106,7 @@ public class BaseRepositoryImplTest extends ApplicationTests {
         Assert.assertFalse(optional.isPresent());
 
 
-        SQL sql = SQLBuilder.instance()
+        SQL sql = SQLBuilder.builder()
                 .available(false)
                 .wheres(new Where("id", article.getId()))
                 .build();
@@ -151,7 +155,7 @@ public class BaseRepositoryImplTest extends ApplicationTests {
 
         articleRepository.deleteAll();
 
-        SQL sql = SQLBuilder.instance()
+        SQL sql = SQLBuilder.builder()
                 .build();
 
         List<Article> articles = articleRepository.select(sql);
@@ -181,14 +185,14 @@ public class BaseRepositoryImplTest extends ApplicationTests {
             articleRepository.save(article);
         }
 
-        SQL sql = SQLBuilder.instance()
+        SQL sql = SQLBuilder.builder()
                 .where("name", Operation.ALL_LIKE, "test")
                 .build();
 
         List<Article> articles = articleRepository.select(sql);
         Assert.assertEquals(10, articles.size());
 
-        SQL sql1 = SQLBuilder.instance()
+        SQL sql1 = SQLBuilder.builder()
                 .where("id", 10L).build();
         List<Article> articles1 = articleRepository.select(sql1);
         Assert.assertEquals(1, articles1.size());
@@ -205,7 +209,7 @@ public class BaseRepositoryImplTest extends ApplicationTests {
             articleRepository.save(article);
         }
 
-        SQL sql = SQLBuilder.instance()
+        SQL sql = SQLBuilder.builder()
                 .build();
 
         DomainPage<Article> domainPage = articleRepository.selectByPage(sql, 0, 2);
@@ -225,7 +229,7 @@ public class BaseRepositoryImplTest extends ApplicationTests {
             articleRepository.save(article);
         }
 
-        SQL sql = SQLBuilder.instance()
+        SQL sql = SQLBuilder.builder()
                 .build();
 
         DomainCursor<Article> cursor = articleRepository.selectByCursor(sql, 0, 3);
@@ -250,7 +254,7 @@ public class BaseRepositoryImplTest extends ApplicationTests {
             articleRepository.save(article);
         }
 
-        SQL sql = SQLBuilder.instance()
+        SQL sql = SQLBuilder.builder()
                 .order("name", OrderBy.DESC)
                 .build();
 

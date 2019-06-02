@@ -1,10 +1,16 @@
 package com.argyranthemum.common.jpa.base;
 
+import com.argyranthemum.common.core.enums.AvailableEnum;
+import com.argyranthemum.common.core.exception.NotEntityException;
+import com.argyranthemum.common.core.util.BeanUtil;
 import com.argyranthemum.common.domain.BaseDomain;
-import com.argyranthemum.common.domain.enumeration.AvailableEnum;
 import com.argyranthemum.common.domain.pojo.DomainCursor;
 import com.argyranthemum.common.domain.pojo.DomainPage;
-import com.argyranthemum.common.jpa.condition.*;
+import com.argyranthemum.common.jpa.condition.Operation;
+import com.argyranthemum.common.jpa.condition.Order;
+import com.argyranthemum.common.jpa.condition.SQL;
+import com.argyranthemum.common.jpa.condition.SQLBuilder;
+import com.argyranthemum.common.jpa.condition.Where;
 import com.google.common.collect.Lists;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -122,6 +128,23 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends AbstractBase
 
     @Transactional
     @Override
+    public T merge(T entity) {
+        ID id = (ID) ((BaseDomain) entity).getId();
+        if (id == null) {
+            throw new IllegalArgumentException("id is null");
+        }
+        Optional<T> optional = this.findById(id);
+        if (!optional.isPresent()) {
+            throw new NotEntityException();
+        }
+        T store = optional.get();
+        BeanUtil.merge(entity, store);
+        update(store);
+        return store;
+    }
+
+    @Transactional
+    @Override
     public T refresh(T entity) {
         em.refresh(entity);
         return entity;
@@ -140,6 +163,9 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends AbstractBase
     @Transactional(readOnly = true)
     @Override
     public DomainPage<T> selectByPage(SQL sql, int pageIndex, int pageSize) {
+        if (pageIndex <= 0) {
+            throw new IllegalArgumentException("pageIndex should greater than 0");
+        }
 
         List<T> list = getList(sql, pageIndex, pageSize);
 
@@ -267,21 +293,21 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends AbstractBase
         jpql = jpql + getOrders(sql);
         Query query = em.createQuery(jpql);
         setWheres(query, sql);
-        query.setFirstResult(cursor * count);
+        query.setFirstResult((cursor - 1) * count);
         query.setMaxResults(count);
         return query.getResultList();
     }
 
     @Override
     public List<T> findAll() {
-        SQL sql = SQLBuilder.instance()
+        SQL sql = SQLBuilder.builder()
                 .build();
         return this.select(sql);
     }
 
     @Override
     public List<T> findAllById(Iterable<ID> ids) {
-        SQL sql = SQLBuilder.instance()
+        SQL sql = SQLBuilder.builder()
                 .where("id", Operation.IN, ids)
                 .build();
         return this.select(sql);

@@ -1,4 +1,4 @@
-package com.argyranthemum.common.domain.enumeration;
+package com.argyranthemum.common.core.enums;
 
 /**
  * @Description: AvailableEnum枚举

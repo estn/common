@@ -10,7 +10,7 @@ public class UUIDUtilTest {
 
     @Test
     public void randomUUID() throws Exception {
-        String uuid = UUIDUtil.randomUUID();
+        String uuid = UUIDUtil.uuid();
         Assert.assertNotNull(uuid);
         Assert.assertEquals(uuid.length(), 36);
 
@@ -18,7 +18,7 @@ public class UUIDUtilTest {
 
     @Test
     public void randomWithoutBar() throws Exception {
-        String uuid = UUIDUtil.randomWithoutBar();
+        String uuid = UUIDUtil.random();
         Assert.assertNotNull(uuid);
         Assert.assertEquals(uuid.length(), 32);
         Assert.assertFalse(uuid.contains("-"));
