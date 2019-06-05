@@ -2,6 +2,7 @@ package com.argyranthemum.common.domain;
 
 
 import com.argyranthemum.common.core.enums.AvailableEnum;
+import com.argyranthemum.common.core.util.UUIDUtil;
 
 import javax.persistence.Column;
 import javax.persistence.EnumType;
@@ -13,7 +14,6 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * Description: 基础类，其他实体类集成本类
@@ -59,7 +59,7 @@ public class BaseDomain {
      * UUID，唯一代表一条记录信息
      */
     @Column(name = "uuid", length = 36)
-    private String uuid = UUID.randomUUID().toString();
+    private String uuid = UUIDUtil.random();
 
 
     public Long getId() {
