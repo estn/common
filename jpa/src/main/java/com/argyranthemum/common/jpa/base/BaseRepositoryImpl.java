@@ -139,8 +139,7 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends AbstractBase
         }
         T store = optional.get();
         BeanUtil.merge(entity, store);
-        update(store);
-        return store;
+        return this.update(store);
     }
 
     @Transactional
