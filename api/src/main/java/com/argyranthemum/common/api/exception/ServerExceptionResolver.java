@@ -65,7 +65,9 @@ public class ServerExceptionResolver extends AbstractHandlerExceptionResolver {
             response.setCode(DefaultError.SYSTEM_INTERNAL_ERROR.getErrorCode());
             response.setData(DefaultError.SYSTEM_INTERNAL_ERROR.getErrorMessage());
             if (!ConfigurationConst.IS_RELEASE) {
-                response.setData(ex.getMessage());
+                String message = ex.getMessage();
+                message = message == null ? "NullPointException" : message;
+                response.setData(message);
             }
         }
 
