@@ -5,6 +5,7 @@ import com.argyranthemum.common.core.constant.ConfigurationConst;
 import com.argyranthemum.common.core.exception.BaseException;
 import com.argyranthemum.common.core.exception.DefaultError;
 import com.argyranthemum.common.core.serializer.JacksonUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.AccessDeniedException;
@@ -26,6 +28,20 @@ public class ServerExceptionResolver extends AbstractHandlerExceptionResolver {
     @Override
     protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         logger.error(request.getRequestURI() + " | " + JacksonUtil.write(request.getParameterMap()) + " | " + ex.toString(), ex);
+
+        BufferedReader br;
+        try {
+            br = request.getReader();
+            String str, wholeStr = "";
+            while ((str = br.readLine()) != null) {
+                wholeStr += str;
+            }
+            if (StringUtils.isNotBlank(wholeStr)) {
+                logger.error("requet body:{}", wholeStr);
+            }
+        } catch (IOException e) {
+        }
+
         PrintWriter pw = null;
         try {
             response.setContentType(contentType);
