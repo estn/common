@@ -24,7 +24,7 @@ public class ServerExceptionResolver extends AbstractHandlerExceptionResolver {
 
     @Override
     protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        logger.error(ex.toString(), ex);
+        logger.error(request.getRequestURI() + " | " + JacksonUtil.write(request.getParameterMap()) + " | " + ex.toString() , ex);
         PrintWriter pw = null;
         try {
             response.setContentType(contentType);
