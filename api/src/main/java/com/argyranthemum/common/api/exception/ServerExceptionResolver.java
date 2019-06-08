@@ -18,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.AccessDeniedException;
+import java.util.Map;
 
 public class ServerExceptionResolver extends AbstractHandlerExceptionResolver {
 
@@ -27,20 +28,8 @@ public class ServerExceptionResolver extends AbstractHandlerExceptionResolver {
 
     @Override
     protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        logger.error(request.getRequestURI() + " | " + JacksonUtil.write(request.getParameterMap()) + " | " + ex.toString(), ex);
 
-        BufferedReader br;
-        try {
-            br = request.getReader();
-            String str, wholeStr = "";
-            while ((str = br.readLine()) != null) {
-                wholeStr += str;
-            }
-            if (StringUtils.isNotBlank(wholeStr)) {
-                logger.error("requet body:{}", wholeStr);
-            }
-        } catch (IOException e) {
-        }
+        this.writeLog(request, ex);
 
         PrintWriter pw = null;
         try {
@@ -57,6 +46,30 @@ public class ServerExceptionResolver extends AbstractHandlerExceptionResolver {
         }
 
         return new ModelAndView();
+    }
+
+    private void writeLog(HttpServletRequest request, Exception ex) {
+        logger.error(request.getRequestURI() + " | " + JacksonUtil.write(request.getParameterMap()) + " | " + ex.toString(), ex);
+
+        Map<String, String[]> parameterMap = request.getParameterMap();
+
+        for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
+            logger.error("key:{}. value:{}", entry.getKey(), entry.getValue());
+        }
+
+        BufferedReader br;
+        try {
+            br = request.getReader();
+            String str, wholeStr = "";
+            while ((str = br.readLine()) != null) {
+                wholeStr += str;
+            }
+            if (StringUtils.isNotBlank(wholeStr)) {
+                logger.error("requet body:{}", wholeStr);
+            }
+        } catch (IOException e) {
+        }
+
     }
 
     private Response handleException(Exception ex) {
