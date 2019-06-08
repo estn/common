@@ -1,6 +1,7 @@
 package com.argyranthemum.common.api.exception;
 
 import com.argyranthemum.common.api.base.Response;
+import com.argyranthemum.common.core.constant.ConfigurationConst;
 import com.argyranthemum.common.core.exception.BaseException;
 import com.argyranthemum.common.core.exception.DefaultError;
 import com.argyranthemum.common.core.serializer.JacksonUtil;
@@ -24,7 +25,7 @@ public class ServerExceptionResolver extends AbstractHandlerExceptionResolver {
 
     @Override
     protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        logger.error(request.getRequestURI() + " | " + JacksonUtil.write(request.getParameterMap()) + " | " + ex.toString() , ex);
+        logger.error(request.getRequestURI() + " | " + JacksonUtil.write(request.getParameterMap()) + " | " + ex.toString(), ex);
         PrintWriter pw = null;
         try {
             response.setContentType(contentType);
@@ -63,6 +64,9 @@ public class ServerExceptionResolver extends AbstractHandlerExceptionResolver {
         else {
             response.setCode(DefaultError.SYSTEM_INTERNAL_ERROR.getErrorCode());
             response.setData(DefaultError.SYSTEM_INTERNAL_ERROR.getErrorMessage());
+            if (!ConfigurationConst.IS_RELEASE) {
+                response.setData(ex.getMessage());
+            }
         }
 
         return response;

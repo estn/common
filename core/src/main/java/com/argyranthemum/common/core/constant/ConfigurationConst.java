@@ -55,6 +55,8 @@ public class ConfigurationConst {
     /**
      * 当前系统环境
      */
-    public static String SYSTEM_ENVIRONMENT;
+    public static String ENV;
+
+    public static Boolean IS_RELEASE = true;
 
 }
