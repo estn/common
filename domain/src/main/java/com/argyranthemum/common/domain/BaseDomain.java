@@ -26,21 +26,21 @@ public class BaseDomain {
     private static final long serialVersionUID = 2820473684086191843L;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
      * 数据添加时间，当insert时设置本值
      */
-    @Column(name = "create_time")
+    @Column(name = "create_time", nullable = false)
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date createTime = new Date();
 
     /**
      * 数据修改时间，当insert和update操作时修改本字段值
      */
-    @Column(name = "update_time")
+    @Column(name = "update_time", nullable = false)
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date updateTime;
 
@@ -51,7 +51,7 @@ public class BaseDomain {
      * <p/>
      * 1:可用(默认值)
      */
-    @Column(name = "available")
+    @Column(name = "available", nullable = false)
     @Enumerated(EnumType.ORDINAL)
     private AvailableEnum available = AvailableEnum.AVAILABLE;
 

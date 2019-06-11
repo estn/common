@@ -51,23 +51,25 @@ public class ServerExceptionResolver extends AbstractHandlerExceptionResolver {
     private void writeLog(HttpServletRequest request, Exception ex) {
         logger.error(request.getRequestURI() + " | " + JacksonUtil.write(request.getParameterMap()) + " | " + ex.toString(), ex);
 
-        Map<String, String[]> parameterMap = request.getParameterMap();
-
-        for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
-            logger.error("key:{}. value:{}", entry.getKey(), entry.getValue());
-        }
-
-        BufferedReader br;
-        try {
-            br = request.getReader();
-            String str, wholeStr = "";
-            while ((str = br.readLine()) != null) {
-                wholeStr += str;
+        if (!ConfigurationConst.IS_RELEASE) {
+            Map<String, String[]> parameterMap = request.getParameterMap();
+            for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
+                logger.error("key:{}. value:{}", entry.getKey(), entry.getValue());
             }
-            if (StringUtils.isNotBlank(wholeStr)) {
-                logger.error("requet body:{}", wholeStr);
+
+            BufferedReader br;
+            try {
+                br = request.getReader();
+                String str, wholeStr = "";
+                while ((str = br.readLine()) != null) {
+                    wholeStr += str;
+                }
+                if (StringUtils.isNotBlank(wholeStr)) {
+                    logger.error("request body:{}", wholeStr);
+                }
+            } catch (IOException e) {
+                logger.error(e.getMessage());
             }
-        } catch (IOException e) {
         }
 
     }
