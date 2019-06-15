@@ -1,5 +1,6 @@
-package com.argyranthemum.common.api.context;
+package com.argyranthemum.common.api.interceptor;
 
+import com.argyranthemum.common.api.context.RequestContext;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;

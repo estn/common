@@ -1,5 +1,6 @@
-package com.argyranthemum.common.api.auth;
+package com.argyranthemum.common.api.interceptor;
 
+import com.argyranthemum.common.api.context.ParameterUtil;
 import com.argyranthemum.common.core.auth.Auth;
 import com.argyranthemum.common.core.auth.AuthService;
 import com.argyranthemum.common.core.auth.AuthToken;
@@ -38,6 +39,10 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (handler instanceof HandlerMethod) {
             Auth auth = ((HandlerMethod) handler).getMethod().getAnnotation(Auth.class);
+            if (auth == null) {
+                auth = ((HandlerMethod) handler).getBeanType().getAnnotation(Auth.class);
+            }
+
             if (auth != null) {
 
                 //1.获取Token

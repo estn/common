@@ -2,7 +2,7 @@
  * Copyright  2019  weibo
  * All Right Reserved.
  */
-package com.argyranthemum.common.api.auth;
+package com.argyranthemum.common.api.context;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
