@@ -5,7 +5,6 @@ import com.argyranthemum.common.core.constant.ConfigurationConst;
 import com.argyranthemum.common.core.exception.BaseException;
 import com.argyranthemum.common.core.exception.DefaultError;
 import com.argyranthemum.common.core.serializer.JacksonUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -14,11 +13,10 @@ import org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.AccessDeniedException;
-import java.util.Map;
+import java.util.Enumeration;
 
 public class ServerExceptionResolver extends AbstractHandlerExceptionResolver {
 
@@ -53,29 +51,14 @@ public class ServerExceptionResolver extends AbstractHandlerExceptionResolver {
 
         // 非正式环境. 打印更多的日志
         if (!ConfigurationConst.IS_RELEASE) {
-
+            Enumeration<String> headerNames = request.getHeaderNames();
+            while (headerNames.hasMoreElements()) {
+                String headerName = headerNames.nextElement();
+                String headerValue = request.getHeader(headerName);
+                logger.error("headerName:{}. headerValue:{}", headerName, headerValue);
+            }
             ex.printStackTrace();
-
-            Map<String, String[]> parameterMap = request.getParameterMap();
-            for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
-                logger.error("key:{}. value:{}", entry.getKey(), entry.getValue());
-            }
-
-            BufferedReader br;
-            try {
-                br = request.getReader();
-                String str, wholeStr = "";
-                while ((str = br.readLine()) != null) {
-                    wholeStr += str;
-                }
-                if (StringUtils.isNotBlank(wholeStr)) {
-                    logger.error("request body:{}", wholeStr);
-                }
-            } catch (IOException e) {
-                logger.error(e.getMessage());
-            }
         }
-
     }
 
     private Response handleException(Exception ex) {

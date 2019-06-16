@@ -8,7 +8,7 @@ package com.argyranthemum.common.core.auth;
  * @Description: AuthService
  * @CreateTime: 2019-05-18 15:23
  */
-public interface AuthService {
+public interface AuthTokenService {
 
     AuthToken retrieveToken(String token);
 }
