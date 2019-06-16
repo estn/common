@@ -2,6 +2,7 @@ package com.argyranthemum.common.api.config;
 
 import com.argyranthemum.common.api.convert.JacksonObjectMapperHttpMessageConvert;
 import com.argyranthemum.common.api.exception.ServerExceptionResolver;
+import com.argyranthemum.common.api.formatter.BooleanToEnumFormatter;
 import com.argyranthemum.common.api.formatter.StringToDateFormatter;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -45,6 +46,7 @@ public class WebMvcConfigurerSupport implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addFormatter(new StringToDateFormatter());
+        registry.addFormatter(new BooleanToEnumFormatter());
     }
 
     /**
