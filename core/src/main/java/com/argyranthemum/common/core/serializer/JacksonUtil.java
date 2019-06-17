@@ -32,7 +32,7 @@ public class JacksonUtil extends ObjectMapper {
         configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 
         // 时间格式化输出
-        setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        setDateFormat(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"));
 
         //针对特殊的字段进行设置序列化
         SimpleModule simpleModule = new SimpleModule();

@@ -34,4 +34,12 @@ public class DateUtil {
         return new DateTime().plusDays(1).withTimeAtStartOfDay().plusSeconds(-1).toDate();
     }
 
+    public static Date startOfDay(Date date) {
+        return new DateTime(date).withTimeAtStartOfDay().toDate();
+    }
+
+    public static Date endOfDay(Date date) {
+        return new DateTime(date).plusDays(1).withTimeAtStartOfDay().plusSeconds(-1).toDate();
+    }
+
 }
