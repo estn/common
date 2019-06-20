@@ -31,6 +31,9 @@ public class JacksonUtil extends ObjectMapper {
         // 当数组中只有一个元素时，也按照数组输出
         configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 
+        // 忽略不认识的字段
+        disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
         // 时间格式化输出
         setDateFormat(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"));
 
