@@ -108,7 +108,8 @@ public class BaseRepositoryImplTest extends ApplicationTests {
 
         SQL sql = SQLBuilder.builder()
                 .available(false)
-                .wheres(new Where("id", article.getId()))
+                .and(new Where("id", article.getId()))
+                .or("name","test")
                 .build();
 
         List<Article> select = articleRepository.select(sql);
@@ -186,14 +187,14 @@ public class BaseRepositoryImplTest extends ApplicationTests {
         }
 
         SQL sql = SQLBuilder.builder()
-                .where("name", Operation.ALL_LIKE, "test")
+                .and("name", Operation.ALL_LIKE, "test")
                 .build();
 
         List<Article> articles = articleRepository.select(sql);
         Assert.assertEquals(10, articles.size());
 
         SQL sql1 = SQLBuilder.builder()
-                .where("id", 10L).build();
+                .and("id", 10L).build();
         List<Article> articles1 = articleRepository.select(sql1);
         Assert.assertEquals(1, articles1.size());
     }
@@ -232,15 +233,14 @@ public class BaseRepositoryImplTest extends ApplicationTests {
         SQL sql = SQLBuilder.builder()
                 .build();
 
-        DomainCursor<Article> cursor = articleRepository.selectByCursor(sql, 0, 3);
+        DomainCursor<Article> cursor = articleRepository.selectByCursor(sql, 1, 3);
         Assert.assertNotNull(cursor);
-        Assert.assertEquals(1, (int) cursor.getNextCursor());
+        Assert.assertEquals(2, (int) cursor.getNextCursor());
         Assert.assertEquals(3, cursor.getList().size());
 
         cursor = articleRepository.selectByCursor(sql, 3, 3);
         Assert.assertNotNull(cursor);
-        Assert.assertEquals(DomainCursor.END_CURSOR, cursor.getNextCursor());
-        Assert.assertEquals(1, cursor.getList().size());
+        Assert.assertEquals(3, cursor.getList().size());
     }
 
     @Test
@@ -258,7 +258,7 @@ public class BaseRepositoryImplTest extends ApplicationTests {
                 .order("name", OrderBy.DESC)
                 .build();
 
-        DomainPage<Article> domainPage = articleRepository.selectByPage(sql, 0, 1);
+        DomainPage<Article> domainPage = articleRepository.selectByPage(sql, 1, 1);
         Assert.assertNotNull(domainPage);
         Assert.assertEquals("test9", domainPage.getDomains().get(0).getName());
     }

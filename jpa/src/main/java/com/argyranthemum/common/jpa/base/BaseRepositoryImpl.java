@@ -153,7 +153,9 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends AbstractBase
     @Override
     public List<T> select(SQL sql) {
         String jpql = getDefaultSQL(sql);
-        jpql = jpql + getWheres(sql);
+        jpql = jpql + getAnds(sql);
+        jpql = jpql + getOrs(sql);
+        jpql = jpql + getOrders(sql);
         Query query = em.createQuery(jpql);
         setWheres(query, sql);
         return query.getResultList();
@@ -169,7 +171,8 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends AbstractBase
         List<T> list = getList(sql, pageIndex, pageSize);
 
         String countSQL = getDefaultCountSQL(sql);
-        countSQL = countSQL + getWheres(sql);
+        countSQL = countSQL + getAnds(sql);
+        countSQL = countSQL + getOrs(sql);
         Query query = em.createQuery(countSQL);
         setWheres(query, sql);
         Integer totalCount = ((Long) query.getResultList().get(0)).intValue();
@@ -190,6 +193,11 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends AbstractBase
         return new DomainCursor(list, nextCursor);
     }
 
+    @Override
+    public EntityManager getEntityManager() {
+        return em;
+    }
+
     private String getDefaultSQL(SQL sql) {
         if (!sql.getAvailable()) {
             return "SELECT c FROM " + domainClass.getName() + " c WHERE 1 = 1";
@@ -204,13 +212,51 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends AbstractBase
         return "SELECT COUNT(c) FROM " + domainClass.getName() + " c WHERE c.available = 1";
     }
 
-    private String getWheres(SQL sql) {
+    private String getOrs(SQL sql) {
 
         if (sql == null) {
             return "";
         }
 
-        List<Where> wheres = sql.getWheres();
+        List<Where> wheres = sql.getOrs();
+        if (wheres == null || wheres.size() == 0) {
+            return "";
+        }
+
+        StringBuilder whereString = new StringBuilder();
+        whereString.append(" AND  (  ");
+
+        int position = sql.getAnds().size() + 1;
+        boolean first = true;
+        for (Where where : wheres) {
+            if (where.getOperation().equals(Operation.IS_NULL) || where.getOperation().equals(Operation.IS_NOT_NULL)) {
+                if (first) {
+                    whereString.append(" c.").append(where.getField()).append(" ").append(where.getOperation().getValue());
+                    first = false;
+                } else {
+                    whereString.append(" OR c.").append(where.getField()).append(" ").append(where.getOperation().getValue());
+                }
+                continue;
+            }
+            if (first) {
+                whereString.append(" c.").append(where.getField()).append(" ").append(where.getOperation().getValue()).append(" ?").append(position);
+                first = false;
+            } else {
+                whereString.append(" OR c.").append(where.getField()).append(" ").append(where.getOperation().getValue()).append(" ?").append(position);
+            }
+            position++;
+        }
+        whereString.append("  )  ");
+        return whereString.toString();
+    }
+
+    private String getAnds(SQL sql) {
+
+        if (sql == null) {
+            return "";
+        }
+
+        List<Where> wheres = sql.getAnds();
         if (wheres == null || wheres.size() == 0) {
             return "";
         }
@@ -237,7 +283,7 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends AbstractBase
 
         List<Order> orders = sql.getOrders();
         if (orders == null || orders.size() == 0) {
-            return "";
+            return " ORDER BY id DESC ";
         }
 
         StringBuilder orderByString = new StringBuilder(" ORDER BY");
@@ -256,39 +302,40 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends AbstractBase
             return;
         }
 
-        List<Where> wheres = sql.getWheres();
-        if (wheres == null || wheres.size() == 0) {
-            return;
-        }
-
-        int position = 1;
-        for (Where where : wheres) {
-            Object value = where.getValue();
-            if ("like".equals(where.getOperation().getValue())) {
-                switch (where.getOperation()) {
-                    case ALL_LIKE:
-                        value = "%" + value + "%";
-                        break;
-                    case LEFT_LIKE:
-                        value = "%" + value;
-                        break;
-                    case RIGHT_LIKE:
-                        value = value + "%";
-                        break;
-                }
-            }
-            if (Operation.IS_NULL.equals(where.getOperation()) || Operation.IS_NOT_NULL.equals(where.getOperation())) {
-                continue;
-            }
-            query.setParameter(position, value);
+        int position = 0;
+        List<Where> wheres = sql.getAnds();
+        wheres.addAll(sql.getOrs());
+        if (wheres.size() > 0) {
             position++;
+            for (Where where : wheres) {
+                Object value = where.getValue();
+                if ("like".equals(where.getOperation().getValue())) {
+                    switch (where.getOperation()) {
+                        case ALL_LIKE:
+                            value = "%" + value + "%";
+                            break;
+                        case LEFT_LIKE:
+                            value = "%" + value;
+                            break;
+                        case RIGHT_LIKE:
+                            value = value + "%";
+                            break;
+                    }
+                }
+                if (Operation.IS_NULL.equals(where.getOperation()) || Operation.IS_NOT_NULL.equals(where.getOperation())) {
+                    continue;
+                }
+                query.setParameter(position, value);
+                position++;
+            }
         }
 
     }
 
     private List<T> getList(SQL sql, int cursor, int count) {
         String jpql = getDefaultSQL(sql);
-        jpql = jpql + getWheres(sql);
+        jpql = jpql + getAnds(sql);
+        jpql = jpql + getOrs(sql);
         jpql = jpql + getOrders(sql);
         Query query = em.createQuery(jpql);
         setWheres(query, sql);
@@ -307,7 +354,7 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends AbstractBase
     @Override
     public List<T> findAllById(Iterable<ID> ids) {
         SQL sql = SQLBuilder.builder()
-                .where("id", Operation.IN, ids)
+                .and("id", Operation.IN, ids)
                 .build();
         return this.select(sql);
     }

@@ -19,9 +19,14 @@ public class SQL {
     private List<String> selects;
 
     /**
-     * 查询条件集合
+     * and查询条件集合
      */
-    private List<Where> wheres;
+    private List<Where> ands;
+
+    /**
+     * or查询条件
+     */
+    private List<Where> ors;
 
     /**
      * 排序字段
@@ -52,12 +57,20 @@ public class SQL {
         this.selects = selects;
     }
 
-    public List<Where> getWheres() {
-        return wheres;
+    public List<Where> getAnds() {
+        return ands;
     }
 
-    public void setWheres(List<Where> wheres) {
-        this.wheres = wheres;
+    public void setAnds(List<Where> ands) {
+        this.ands = ands;
+    }
+
+    public List<Where> getOrs() {
+        return ors;
+    }
+
+    public void setOrs(List<Where> ors) {
+        this.ors = ors;
     }
 
     public List<Order> getOrders() {

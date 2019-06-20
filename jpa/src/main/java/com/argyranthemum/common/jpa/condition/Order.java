@@ -17,6 +17,9 @@ public class Order {
 
 
     public Order(String field, OrderBy orderBy) {
+        if (field.contains(";") || field.contains(" ")) {
+            throw new IllegalArgumentException("order field error");
+        }
         this.field = field;
         this.orderBy = orderBy;
     }

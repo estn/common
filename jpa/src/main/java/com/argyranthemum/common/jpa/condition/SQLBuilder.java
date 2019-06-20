@@ -17,7 +17,9 @@ public class SQLBuilder {
 
     private List<String> selects;
 
-    private List<Where> wheres;
+    private List<Where> ands;
+
+    private List<Where> ors;
 
     private List<Order> orders;
 
@@ -27,7 +29,8 @@ public class SQLBuilder {
 
     private SQLBuilder() {
         this.selects = new ArrayList<>();
-        this.wheres = new ArrayList<>();
+        this.ands = new ArrayList<>();
+        this.ors = new ArrayList<>();
         this.orders = new ArrayList<>();
         this.groups = new ArrayList<>();
         this.available = true;
@@ -37,20 +40,37 @@ public class SQLBuilder {
         return new SQLBuilder();
     }
 
-    public SQLBuilder wheres(Where... wheres) {
-        this.wheres.addAll(Arrays.asList(wheres));
+    public SQLBuilder and(Where... wheres) {
+        this.ands.addAll(Arrays.asList(wheres));
         return this;
     }
 
-    public SQLBuilder where(String field, Operation operation, Object value) {
+    public SQLBuilder and(String field, Operation operation, Object value) {
         Where where = new Where(field, operation, value);
-        this.wheres.add(where);
+        this.ands.add(where);
         return this;
     }
 
-    public SQLBuilder where(String field, Object value) {
+    public SQLBuilder and(String field, Object value) {
         Where where = new Where(field, value);
-        this.wheres.add(where);
+        this.ands.add(where);
+        return this;
+    }
+
+    public SQLBuilder or(Where... wheres) {
+        this.ors.addAll(Arrays.asList(wheres));
+        return this;
+    }
+
+    public SQLBuilder or(String field, Operation operation, Object value) {
+        Where where = new Where(field, operation, value);
+        this.ors.add(where);
+        return this;
+    }
+
+    public SQLBuilder or(String field, Object value) {
+        Where where = new Where(field, value);
+        this.ors.add(where);
         return this;
     }
 
@@ -78,7 +98,8 @@ public class SQLBuilder {
     public SQL build() {
         SQL sql = new SQL();
         sql.setSelects(selects);
-        sql.setWheres(wheres);
+        sql.setAnds(ands);
+        sql.setOrs(ors);
         sql.setGroups(groups);
         sql.setOrders(orders);
         sql.setAvailable(available);

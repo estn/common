@@ -6,6 +6,7 @@ import com.argyranthemum.common.jpa.condition.SQL;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
+import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.List;
 
@@ -65,5 +66,12 @@ public interface BaseRepository<T, ID extends Serializable> extends CrudReposito
      * @return DomainCursor
      */
     DomainCursor<T> selectByCursor(SQL sql, int cursor, int count);
+
+    /**
+     * 获取EntityManager
+     *
+     * @return
+     */
+    EntityManager getEntityManager();
 
 }
