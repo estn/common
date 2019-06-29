@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -288,7 +289,7 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends AbstractBase
 
         StringBuilder orderByString = new StringBuilder(" ORDER BY");
         for (Order order : orders) {
-            orderByString.append(" ").append(order.getField()).append(" ").append(order.getOrderBy().name()).append(",");
+            orderByString.append(" c.").append(order.getField()).append(" ").append(order.getOrderBy().name()).append(",");
         }
 
         String orderBy = orderByString.toString();
@@ -303,7 +304,8 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends AbstractBase
         }
 
         int position = 0;
-        List<Where> wheres = sql.getAnds();
+        List<Where> wheres = new ArrayList<>();
+        wheres.addAll(sql.getAnds());
         wheres.addAll(sql.getOrs());
         if (wheres.size() > 0) {
             position++;
