@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.AccessDeniedException;
-import java.util.Enumeration;
 
 public class ServerExceptionResolver extends AbstractHandlerExceptionResolver {
 
@@ -48,17 +47,6 @@ public class ServerExceptionResolver extends AbstractHandlerExceptionResolver {
 
     private void writeLog(HttpServletRequest request, Exception ex) {
         logger.error(request.getRequestURI() + " | " + JacksonUtil.write(request.getParameterMap()) + " | " + ex.toString(), ex);
-
-        // 非正式环境. 打印更多的日志
-        if (!ConfigurationConst.IS_RELEASE) {
-            Enumeration<String> headerNames = request.getHeaderNames();
-            while (headerNames.hasMoreElements()) {
-                String headerName = headerNames.nextElement();
-                String headerValue = request.getHeader(headerName);
-                logger.error("headerName:{}. headerValue:{}", headerName, headerValue);
-            }
-            ex.printStackTrace();
-        }
     }
 
     private Response handleException(Exception ex) {
