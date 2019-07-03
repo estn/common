@@ -4,6 +4,8 @@
  */
 package com.argyranthemum.common.core.auth;
 
+import java.util.List;
+
 /**
  * @Description: Token
  * @CreateTime: 2019-05-18 15:38
@@ -24,4 +26,9 @@ public interface AuthToken {
      * token是否过期
      */
     Boolean expired();
+
+
+    default List<String> roles() {
+        return null;
+    }
 }

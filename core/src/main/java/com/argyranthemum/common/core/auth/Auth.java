@@ -1,5 +1,7 @@
 package com.argyranthemum.common.core.auth;
 
+import org.springframework.core.annotation.AliasFor;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -11,13 +13,18 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface Auth {
 
     /**
-     * 通过接口参数认证
+     * 参数认证
      */
     String parameter() default "";
 
+    @AliasFor("parameter")
+    String value() default "";
+
     /**
-     * 通过接口返回值认证
+     * 认证类型校验
+     *
+     * @return
      */
-    String response() default "";
+    String[] roles() default {};
 
 }

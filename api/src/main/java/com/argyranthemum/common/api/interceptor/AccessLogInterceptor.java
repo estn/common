@@ -5,7 +5,7 @@
 package com.argyranthemum.common.api.interceptor;
 
 import com.argyranthemum.common.api.context.RequestContext;
-import com.argyranthemum.common.core.auth.TargetContext;
+import com.argyranthemum.common.core.auth.AuthTokenContext;
 import com.argyranthemum.common.core.serializer.JacksonUtil;
 import com.google.common.collect.Maps;
 import lombok.AllArgsConstructor;
@@ -35,9 +35,9 @@ public class AccessLogInterceptor extends HandlerInterceptorAdapter {
         Map<String, String> parameterMap = convert(request.getParameterMap());
 
         Log log = new Log();
-        Long id = TargetContext.get();
+        String id = AuthTokenContext.get().targetId();
         if (id != null) {
-            log.setId(id.toString());
+            log.setId(id);
         }
         log.setTime(new DateTime().toString());
         log.setIp(RequestContext.getRealIp(request));

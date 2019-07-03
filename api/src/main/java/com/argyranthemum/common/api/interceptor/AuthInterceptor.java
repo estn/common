@@ -2,6 +2,8 @@ package com.argyranthemum.common.api.interceptor;
 
 import com.argyranthemum.common.api.context.ParameterUtil;
 import com.argyranthemum.common.core.auth.Auth;
+import com.argyranthemum.common.core.auth.AuthToken;
+import com.argyranthemum.common.core.auth.AuthTokenContext;
 import com.argyranthemum.common.core.auth.TargetContext;
 import com.argyranthemum.common.core.exception.BaseException;
 import com.argyranthemum.common.core.exception.DefaultError;
@@ -14,6 +16,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @Description: Auth拦截器
@@ -35,28 +38,75 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             }
 
             if (auth != null) {
-                Long targetId = TargetContext.get();
-                if (targetId == null) {
-                    throw new BaseException(DefaultError.ACCESS_DENIED_ERROR);
+
+                AuthToken authToken = AuthTokenContext.get();
+
+                if (authToken == null) {
+                    throw new BaseException(DefaultError.TOKEN_ERROR);
                 }
 
-                String authParameter = auth.parameter();
-                if (StringUtils.isNotBlank(authParameter)) {
-                    String parameterValue = ParameterUtil.get(request, handler, authParameter);
-                    if (!targetId.toString().equals(parameterValue)) {
-                        throw new BaseException(DefaultError.TOKEN_IS_NOT_ALLOW);
-                    }
+                if (authToken.expired()) {
+                    throw new BaseException(DefaultError.TOKEN_EXPIRY);
                 }
 
+//                this.checkRoles(auth, authToken);
+
+                this.checkTargetId(request, handler, auth, authToken);
             }
         }
 
         return super.preHandle(request, response, handler);
     }
 
+    private void checkTargetId(HttpServletRequest request, Object handler, Auth auth, AuthToken authToken) {
+        String targetId = authToken.targetId();
+        if (StringUtils.isBlank(targetId)) {
+            throw new BaseException(DefaultError.ACCESS_DENIED_ERROR);
+        }
+
+        logger.debug("targetId:" + targetId);
+        TargetContext.set(Long.parseLong(targetId));
+
+        String authParameter = auth.parameter();
+        if (StringUtils.isBlank(authParameter)) {
+            authParameter = auth.value();
+        }
+        if (StringUtils.isNotBlank(authParameter)) {
+            String parameterValue = ParameterUtil.get(request, handler, authParameter);
+            if (!targetId.equals(parameterValue)) {
+                throw new BaseException(DefaultError.TOKEN_IS_NOT_ALLOW);
+            }
+        }
+    }
+
+    private void checkRoles(Auth auth, AuthToken authToken) {
+
+        if (auth.roles().length == 0) {
+            return;
+        }
+
+        boolean flag = false;
+        String[] authRoles = auth.roles();
+        if (authRoles.length > 0) {
+            List<String> roles = authToken.roles();
+            if (roles != null && roles.size() > 0) {
+                for (String authRole : authRoles) {
+                    if (roles.contains(authRole)) {
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if (!flag) {
+            throw new BaseException(DefaultError.ACCESS_DENIED_ERROR);
+        }
+    }
+
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
                                 @Nullable Exception ex) throws Exception {
+        TargetContext.remove();
     }
 
 }

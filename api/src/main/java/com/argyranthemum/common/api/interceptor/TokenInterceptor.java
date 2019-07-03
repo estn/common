@@ -2,8 +2,8 @@ package com.argyranthemum.common.api.interceptor;
 
 import com.argyranthemum.common.core.auth.Auth;
 import com.argyranthemum.common.core.auth.AuthToken;
+import com.argyranthemum.common.core.auth.AuthTokenContext;
 import com.argyranthemum.common.core.auth.AuthTokenService;
-import com.argyranthemum.common.core.auth.TargetContext;
 import com.argyranthemum.common.core.constant.SystemConst;
 import com.argyranthemum.common.core.exception.BaseException;
 import com.argyranthemum.common.core.exception.DefaultError;
@@ -48,24 +48,8 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
                 if (StringUtils.isBlank(tokenValue)) {
                     throw new BaseException(DefaultError.TOKEN_NOT_FOUND);
                 }
-
                 AuthToken authToken = authTokenService.retrieveToken(tokenValue);
-
-                if (authToken == null) {
-                    throw new BaseException(DefaultError.TOKEN_ERROR);
-                }
-
-                if (authToken.expired()) {
-                    throw new BaseException(DefaultError.TOKEN_EXPIRY);
-                }
-
-                String targetId = authToken.targetId();
-                if (StringUtils.isBlank(targetId)) {
-                    throw new BaseException(DefaultError.ACCESS_DENIED_ERROR);
-                }
-
-                logger.debug("targetId:" + targetId);
-                TargetContext.set(Long.parseLong(targetId));
+                AuthTokenContext.set(authToken);
             }
         }
 
@@ -83,7 +67,8 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
                                 @Nullable Exception ex) {
-        TargetContext.remove();
+        AuthTokenContext.remove();
+
     }
 
 }
