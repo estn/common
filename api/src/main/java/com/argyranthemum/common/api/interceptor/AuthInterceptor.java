@@ -29,6 +29,15 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthInterceptor.class);
 
+    private String parameter;
+
+    public AuthInterceptor() {
+    }
+
+    public AuthInterceptor(String parameter) {
+        this.parameter = parameter;
+    }
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (handler instanceof HandlerMethod) {
@@ -67,10 +76,19 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         logger.debug("targetId:" + targetId);
         TargetContext.set(Long.parseLong(targetId));
 
+        //1.从parameter获取参数
         String authParameter = auth.parameter();
+
+        //2.从value获取参数
         if (StringUtils.isBlank(authParameter)) {
             authParameter = auth.value();
         }
+
+        //3.最后使用通用的参数
+        if (StringUtils.isBlank(authParameter)) {
+            authParameter = parameter;
+        }
+
         if (StringUtils.isNotBlank(authParameter)) {
             String parameterValue = ParameterUtil.get(request, handler, authParameter);
             if (!targetId.equals(parameterValue)) {
