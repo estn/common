@@ -23,6 +23,13 @@ public interface AuthToken {
     String targetId();
 
     /**
+     * token关联类型
+     *
+     * @return
+     */
+    String type();
+
+    /**
      * token是否过期
      */
     Boolean expired();

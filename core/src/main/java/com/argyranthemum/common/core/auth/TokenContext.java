@@ -2,7 +2,7 @@ package com.argyranthemum.common.core.auth;
 
 import org.springframework.core.NamedThreadLocal;
 
-public class AuthTokenContext {
+public class TokenContext {
 
     private static final ThreadLocal<AuthToken> targetThreadLocal = new NamedThreadLocal<>("Request ThreadLocal");
 

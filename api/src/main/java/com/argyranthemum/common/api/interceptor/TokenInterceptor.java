@@ -2,7 +2,7 @@ package com.argyranthemum.common.api.interceptor;
 
 import com.argyranthemum.common.core.auth.Auth;
 import com.argyranthemum.common.core.auth.AuthToken;
-import com.argyranthemum.common.core.auth.AuthTokenContext;
+import com.argyranthemum.common.core.auth.TokenContext;
 import com.argyranthemum.common.core.auth.AuthTokenService;
 import com.argyranthemum.common.core.constant.SystemConst;
 import com.argyranthemum.common.core.exception.BaseException;
@@ -49,7 +49,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
                     throw new BaseException(DefaultError.TOKEN_NOT_FOUND);
                 }
                 AuthToken authToken = authTokenService.retrieveToken(tokenValue);
-                AuthTokenContext.set(authToken);
+                TokenContext.set(authToken);
             }
         }
 
@@ -67,7 +67,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
                                 @Nullable Exception ex) {
-        AuthTokenContext.remove();
+        TokenContext.remove();
 
     }
 

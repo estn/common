@@ -3,7 +3,7 @@ package com.argyranthemum.common.api.interceptor;
 import com.argyranthemum.common.api.context.ParameterUtil;
 import com.argyranthemum.common.core.auth.Auth;
 import com.argyranthemum.common.core.auth.AuthToken;
-import com.argyranthemum.common.core.auth.AuthTokenContext;
+import com.argyranthemum.common.core.auth.TokenContext;
 import com.argyranthemum.common.core.auth.TargetContext;
 import com.argyranthemum.common.core.exception.BaseException;
 import com.argyranthemum.common.core.exception.DefaultError;
@@ -48,7 +48,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
             if (auth != null) {
 
-                AuthToken authToken = AuthTokenContext.get();
+                AuthToken authToken = TokenContext.get();
 
                 if (authToken == null) {
                     throw new BaseException(DefaultError.TOKEN_ERROR);
