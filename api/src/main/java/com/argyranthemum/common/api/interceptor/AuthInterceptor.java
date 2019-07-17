@@ -68,13 +68,13 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     }
 
     private void checkTargetId(HttpServletRequest request, Object handler, Auth auth, AuthToken authToken) {
-        String targetId = authToken.targetId();
-        if (StringUtils.isBlank(targetId)) {
+        Long targetId = authToken.targetId();
+        if (targetId == null) {
             throw new BaseException(DefaultError.ACCESS_DENIED_ERROR);
         }
 
         logger.debug("targetId:" + targetId);
-        TargetContext.set(Long.parseLong(targetId));
+        TargetContext.set(targetId);
 
         //1.从parameter获取参数
         String authParameter = auth.parameter();
@@ -91,7 +91,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
         if (StringUtils.isNotBlank(authParameter)) {
             String parameterValue = ParameterUtil.get(request, handler, authParameter);
-            if (!targetId.equals(parameterValue)) {
+            if (!targetId.toString().equals(parameterValue)) {
                 throw new BaseException(DefaultError.TOKEN_IS_NOT_ALLOW);
             }
         }

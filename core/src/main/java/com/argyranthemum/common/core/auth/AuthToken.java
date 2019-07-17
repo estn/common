@@ -20,7 +20,7 @@ public interface AuthToken {
     /**
      * token关联ID
      */
-    String targetId();
+    Long targetId();
 
     /**
      * token关联类型

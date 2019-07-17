@@ -1,16 +1,12 @@
 package com.argyranthemum.common.api.interceptor;
 
-import com.argyranthemum.common.core.auth.Auth;
 import com.argyranthemum.common.core.auth.AuthToken;
-import com.argyranthemum.common.core.auth.TokenContext;
 import com.argyranthemum.common.core.auth.AuthTokenService;
+import com.argyranthemum.common.core.auth.TokenContext;
 import com.argyranthemum.common.core.constant.SystemConst;
-import com.argyranthemum.common.core.exception.BaseException;
-import com.argyranthemum.common.core.exception.DefaultError;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.lang.Nullable;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -37,22 +33,12 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (handler instanceof HandlerMethod) {
-
-            Auth auth = ((HandlerMethod) handler).getMethod().getAnnotation(Auth.class);
-            if (auth == null) {
-                auth = ((HandlerMethod) handler).getBeanType().getAnnotation(Auth.class);
-            }
-
-            if (auth != null) {
-                String tokenValue = this.doFetchTokenValue(request);
-                if (StringUtils.isBlank(tokenValue)) {
-                    throw new BaseException(DefaultError.TOKEN_NOT_FOUND);
-                }
+            String tokenValue = this.doFetchTokenValue(request);
+            if (StringUtils.isNotBlank(tokenValue)) {
                 AuthToken authToken = authTokenService.retrieveToken(tokenValue);
                 TokenContext.set(authToken);
             }
         }
-
         return super.preHandle(request, response, handler);
     }
 
@@ -65,10 +51,8 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
-                                @Nullable Exception ex) {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         TokenContext.remove();
-
     }
 
 }

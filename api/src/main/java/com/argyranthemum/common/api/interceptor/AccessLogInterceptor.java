@@ -38,9 +38,9 @@ public class AccessLogInterceptor extends HandlerInterceptorAdapter {
         Log log = new Log();
         AuthToken authToken = TokenContext.get();
         if (authToken != null) {
-            String id = authToken.targetId();
+            Long id = authToken.targetId();
             if (id != null) {
-                log.setId(id);
+                log.setId(id.toString());
             }
         }
 
