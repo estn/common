@@ -59,4 +59,10 @@ public class ConfigurationConst {
 
     public static Boolean IS_RELEASE = true;
 
+    public static String DEV = "dev";
+
+    public static String TEST = "test";
+
+    public static String RELEASE = "release";
+
 }
