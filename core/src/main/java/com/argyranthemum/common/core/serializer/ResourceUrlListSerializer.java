@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ResourceListSerializer extends JsonSerializer<String> {
+public class ResourceUrlListSerializer extends JsonSerializer<String> {
     @Override
     public void serialize(String values, JsonGenerator jgen, SerializerProvider serializers) throws IOException {
         List<String> urls = Lists.newArrayList();
@@ -24,10 +24,9 @@ public class ResourceListSerializer extends JsonSerializer<String> {
                 urls.add(value);
             } else {
                 value = StringUtils.startsWith(value, "/") ? value : "/" + value;
-                jgen.writeString(ConfigurationConst.RESOURCE_ROOT_URL + value);
                 urls.add(ConfigurationConst.RESOURCE_ROOT_URL + value);
             }
         }
-        jgen.writeString(JacksonUtil.write(urls));
+        jgen.writeObject(urls);
     }
 }

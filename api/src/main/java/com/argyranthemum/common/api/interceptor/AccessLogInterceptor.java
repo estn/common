@@ -31,8 +31,22 @@ public class AccessLogInterceptor extends HandlerInterceptorAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(AccessLogInterceptor.class);
 
+    private long size = 1024 * 100;
+
+    public AccessLogInterceptor(long size) {
+        this.size = size;
+    }
+
+    public AccessLogInterceptor() {
+
+    }
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if (request.getContentLength() > size) {
+            return true;
+        }
+
         Map<String, String> parameterMap = convert(request.getParameterMap());
 
         Log log = new Log();
