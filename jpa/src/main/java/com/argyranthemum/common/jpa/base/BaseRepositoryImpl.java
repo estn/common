@@ -145,6 +145,15 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends AbstractBase
 
     @Transactional
     @Override
+    public void remove(ID id) {
+        T t = em.find(domainClass, id);
+        if (t != null) {
+            em.remove(t);
+        }
+    }
+
+    @Transactional
+    @Override
     public T refresh(T entity) {
         em.refresh(entity);
         return entity;

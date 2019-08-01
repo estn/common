@@ -19,7 +19,8 @@ public class SystemConst {
     public static final String UTF8 = "UTF-8";
 
     // 时间格式
-    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
     //mysql DATE_FORMAT 时间格式化
     public static final String SQL_DATE_FORMAT = "%Y-%m-%d";
     // i18n

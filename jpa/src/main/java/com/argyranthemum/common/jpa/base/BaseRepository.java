@@ -29,6 +29,14 @@ public interface BaseRepository<T, ID extends Serializable> extends CrudReposito
      */
     T merge(T entity);
 
+
+    /**
+     * 删除实体. 数据库执行delete操作
+     *
+     * @param id
+     */
+    void remove(ID id);
+
     /**
      * 刷新实体
      *
