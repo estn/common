@@ -14,6 +14,24 @@ import java.util.List;
 public interface BaseRepository<T, ID extends Serializable> extends CrudRepository<T, ID> {
 
     /**
+     * 通过ID查询.
+     * 注: 逻辑删除的数据也会查询
+     *
+     * @param id 主键ID
+     * @return
+     */
+    T queryById(ID id);
+
+    /**
+     * 通过字段查询.
+     *
+     * @param field 字段名称
+     * @param value 字段值
+     * @return
+     */
+    List<T> findByName(String field, String value);
+
+    /**
      * 更新实体
      *
      * @param entity 实体

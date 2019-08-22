@@ -118,6 +118,23 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends AbstractBase
         query.executeUpdate();
     }
 
+    @Override
+    public T queryById(ID id) {
+        T t = em.find(domainClass, id);
+        if (t == null) {
+            throw new NotEntityException();
+        }
+        return t;
+    }
+
+    @Override
+    public List<T> findByName(String field, String value) {
+        SQL sql = SQLBuilder.builder()
+                .and(field, value)
+                .build();
+        return this.select(sql);
+    }
+
     @Transactional
     @Override
     public T update(T entity) {
@@ -187,7 +204,7 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends AbstractBase
         setWheres(query, sql);
         Integer totalCount = ((Long) query.getResultList().get(0)).intValue();
 
-        DomainPage<T> domainPage = new DomainPage<T>(pageIndex, pageSize, totalCount);
+        DomainPage<T> domainPage = new DomainPage<>(pageIndex, pageSize, totalCount);
         domainPage.getDomains().addAll(list);
         return domainPage;
     }
