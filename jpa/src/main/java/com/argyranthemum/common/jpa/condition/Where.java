@@ -4,6 +4,8 @@
  */
 package com.argyranthemum.common.jpa.condition;
 
+import java.util.List;
+
 /**
  * @Description: Condition
  * @Author: estn.zuo
@@ -27,6 +29,17 @@ public class Where {
         this.field = field;
         this.operation = operation;
         this.value = value;
+
+        if (operation.equals(Operation.IN)) {
+            if (value == null) {
+                throw new IllegalArgumentException("value is null");
+            }
+
+            List list = (List) value;
+            if (list.isEmpty()) {
+                throw new IllegalArgumentException("list size is 0L");
+            }
+        }
     }
 
     public String getField() {
