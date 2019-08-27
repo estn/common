@@ -128,7 +128,7 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends AbstractBase
     }
 
     @Override
-    public List<T> findByName(String field, String value) {
+    public List<T> findByField(String field, String value) {
         SQL sql = SQLBuilder.builder()
                 .and(field, value)
                 .build();

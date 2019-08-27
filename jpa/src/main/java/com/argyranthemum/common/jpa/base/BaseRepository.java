@@ -29,7 +29,7 @@ public interface BaseRepository<T, ID extends Serializable> extends CrudReposito
      * @param value 字段值
      * @return
      */
-    List<T> findByName(String field, String value);
+    List<T> findByField(String field, String value);
 
     /**
      * 更新实体
