@@ -3,8 +3,9 @@ package com.argyranthemum.common.api.interceptor;
 import com.argyranthemum.common.api.context.ParameterUtil;
 import com.argyranthemum.common.core.auth.Auth;
 import com.argyranthemum.common.core.auth.AuthToken;
-import com.argyranthemum.common.core.auth.TokenContext;
 import com.argyranthemum.common.core.auth.TargetContext;
+import com.argyranthemum.common.core.auth.TokenContext;
+import com.argyranthemum.common.core.constant.ConfigurationConst;
 import com.argyranthemum.common.core.exception.BaseException;
 import com.argyranthemum.common.core.exception.DefaultError;
 import org.apache.commons.lang3.StringUtils;
@@ -31,11 +32,18 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
     private String parameter;
 
+    private String secret;
+
     public AuthInterceptor() {
     }
 
     public AuthInterceptor(String parameter) {
         this.parameter = parameter;
+    }
+
+    public AuthInterceptor(String parameter, String secret) {
+        this.parameter = parameter;
+        this.secret = secret;
     }
 
     @Override
@@ -46,10 +54,15 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
                 auth = ((HandlerMethod) handler).getBeanType().getAnnotation(Auth.class);
             }
 
+            if (StringUtils.isNotBlank(secret) && !ConfigurationConst.IS_RELEASE) {
+                String secret = request.getParameter("secret");
+                if (this.secret.equals(secret)) {
+                    return super.preHandle(request, response, handler);
+                }
+            }
+
             if (auth != null) {
-
                 AuthToken authToken = TokenContext.get();
-
                 if (authToken == null) {
                     throw new BaseException(DefaultError.TOKEN_ERROR);
                 }
