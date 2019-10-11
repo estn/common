@@ -2,7 +2,7 @@
  * Copyright  2017  Pemass
  * All Right Reserved.
  */
-package com.argyranthemum.common.domain.pojo;
+package com.argyranthemum.common.jpa.domain;
 
 
 import com.argyranthemum.common.core.util.BeanUtil;

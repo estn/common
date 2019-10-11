@@ -1,6 +1,7 @@
 package com.argyranthemum.common.jpa.entity;
 
-import com.argyranthemum.common.domain.BaseDomain;
+
+import com.argyranthemum.common.jpa.domain.BaseDomain;
 
 import javax.persistence.Entity;
 

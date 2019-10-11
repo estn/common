@@ -1,4 +1,4 @@
-package com.argyranthemum.common.domain.pojo;
+package com.argyranthemum.common.jpa.domain;
 
 import java.util.List;
 

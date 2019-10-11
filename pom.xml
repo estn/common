@@ -10,11 +10,11 @@
     <version>1.0.3-RELEASE</version>
     <modules>
         <module>core</module>
-        <module>domain</module>
         <module>jpa</module>
         <module>redis</module>
         <module>api</module>
         <module>portal</module>
+        <module>mybatis</module>
     </modules>
     <name>${project.artifactId}</name>
 
@@ -27,6 +27,7 @@
         <spring.version>5.1.10.RELEASE</spring.version>
         <guava.version>28.0-jre</guava.version>
         <shiro.version>1.3.2</shiro.version>
+        <mybatisplus.version>3.2.0</mybatisplus.version>
     </properties>
 
     <dependencyManagement>
@@ -104,6 +105,30 @@
                 <version>${spring.version}</version>
             </dependency>
             <!-- |spring| end -->
+
+
+            <!-- +++|mybatis-plus|+++  start-->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatisplus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus</artifactId>
+                <version>${mybatisplus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
+                <version>${mybatisplus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-dts</artifactId>
+                <version>${mybatisplus.version}</version>
+            </dependency>
+            <!-- |mybatis-plus| end -->
 
             <dependency>
                 <groupId>com.alibaba</groupId>

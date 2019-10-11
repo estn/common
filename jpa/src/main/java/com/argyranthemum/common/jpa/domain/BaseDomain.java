@@ -1,4 +1,4 @@
-package com.argyranthemum.common.domain;
+package com.argyranthemum.common.jpa.domain;
 
 
 import com.argyranthemum.common.core.enums.AvailableEnum;

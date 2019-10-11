@@ -1,8 +1,8 @@
 package com.argyranthemum.common.jpa.base;
 
-import com.argyranthemum.common.domain.pojo.DomainCursor;
-import com.argyranthemum.common.domain.pojo.DomainPage;
 import com.argyranthemum.common.jpa.condition.SQL;
+import com.argyranthemum.common.jpa.domain.DomainCursor;
+import com.argyranthemum.common.jpa.domain.DomainPage;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 

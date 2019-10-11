@@ -3,14 +3,14 @@ package com.argyranthemum.common.jpa.base;
 import com.argyranthemum.common.core.enums.AvailableEnum;
 import com.argyranthemum.common.core.exception.NotEntityException;
 import com.argyranthemum.common.core.util.BeanUtil;
-import com.argyranthemum.common.domain.BaseDomain;
-import com.argyranthemum.common.domain.pojo.DomainCursor;
-import com.argyranthemum.common.domain.pojo.DomainPage;
 import com.argyranthemum.common.jpa.condition.Operation;
 import com.argyranthemum.common.jpa.condition.Order;
 import com.argyranthemum.common.jpa.condition.SQL;
 import com.argyranthemum.common.jpa.condition.SQLBuilder;
 import com.argyranthemum.common.jpa.condition.Where;
+import com.argyranthemum.common.jpa.domain.BaseDomain;
+import com.argyranthemum.common.jpa.domain.DomainCursor;
+import com.argyranthemum.common.jpa.domain.DomainPage;
 import com.google.common.collect.Lists;
 import org.springframework.transaction.annotation.Transactional;
 

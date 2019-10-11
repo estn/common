@@ -1,0 +1,18 @@
+# DataSource Config
+env: dev
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://happyjt.cdzzgg.cn:4306/happyjt?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: happyJT!@#123
+  redis:
+    host: happyjt.cdzzgg.cn
+    port: 7379
+    password: Vyjc7CAp*$
+    database: 0
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  configuration:
+    jdbc-type-for-null: 'null'
