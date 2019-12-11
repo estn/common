@@ -10,6 +10,10 @@ public enum DefaultError implements CommonError {
     TOKEN_ERROR("0005", "访问令牌错误"),
     TOKEN_EXPIRY("0006", "访问令牌过期"),
     TOKEN_IS_NOT_ALLOW("0007", "BALABALA, YOU ARE A BAD BOY"),
+    APP_ID_ERROR("0008", "APPID错误"),
+    DUPLICATE_NONCE("0009", "随机字符串重复"),
+    TIMESTAMP_ERROR("0010", "时间戳不正确"),
+    SIGN_ERROR("0011", "签名错误"),
 
     METHOD_NOT_SUPPORTED_ERROR("0008", "请求方法错误"),
 

@@ -6,7 +6,9 @@ package com.argyranthemum.common.core.support;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import org.springframework.util.DigestUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +24,12 @@ public class SignSupport {
     private SignSupport() {
     }
 
+    public static String sign(Map<String, Object> param, String key) {
+        String linkString = createLinkString(param);
+        linkString = linkString + "&" + key;
+        return DigestUtils.md5DigestAsHex(linkString.getBytes(StandardCharsets.UTF_8)).toLowerCase();
+    }
+
     /**
      * 将Map中的Value为数组的类型转换成Object类型
      *
@@ -33,12 +41,12 @@ public class SignSupport {
         for (String key : param.keySet()) {
             String[] values = param.get(key);
             if (values != null && values.length > 0) {
-                String value = "";
+                StringBuilder value = new StringBuilder();
                 for (String _v : values) {
-                    value = value + _v + ",";
+                    value.append(_v).append(",");
                 }
-                value = value.substring(0, value.length() - 1);
-                result.put(key, value);
+                value = new StringBuilder(value.substring(0, value.length() - 1));
+                result.put(key, value.toString());
             }
         }
         return result;

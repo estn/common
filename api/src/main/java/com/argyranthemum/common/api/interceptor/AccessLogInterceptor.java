@@ -9,7 +9,6 @@ import com.argyranthemum.common.core.auth.AuthToken;
 import com.argyranthemum.common.core.auth.TokenContext;
 import com.argyranthemum.common.core.serializer.JacksonUtil;
 import com.google.common.collect.Maps;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
@@ -31,42 +30,50 @@ public class AccessLogInterceptor extends HandlerInterceptorAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(AccessLogInterceptor.class);
 
-    private long size = 1024 * 100;
+    private long size;
 
-    public AccessLogInterceptor(long size) {
-        this.size = size;
-    }
+    private static final long DEFAULT_SIZE = 1024 * 100;
 
     public AccessLogInterceptor() {
+        this.size = DEFAULT_SIZE;
+    }
 
+    public AccessLogInterceptor(long size) {
+        if (size <= 0) {
+            throw new IllegalArgumentException("size must gather than zero");
+        }
+        this.size = size;
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (request.getContentLength() > size) {
-            return true;
-        }
-
-        Map<String, String> parameterMap = convert(request.getParameterMap());
-
-        Log log = new Log();
-        AuthToken authToken = TokenContext.get();
-        if (authToken != null) {
-            Long id = authToken.targetId();
-            if (id != null) {
-                log.setId(id.toString());
+        try {
+            if (request.getContentLength() > size) {
+                return true;
             }
+
+            Map<String, String> parameterMap = convert(request.getParameterMap());
+            AccessLog log = new AccessLog();
+            AuthToken authToken = TokenContext.get();
+            if (authToken != null) {
+                Long id = authToken.targetId();
+                if (id != null) {
+                    log.setId(id.toString());
+                }
+            }
+
+            log.setTime(new DateTime().toString());
+            log.setIp(RequestContext.getRealIp(request));
+            log.setMethod(request.getMethod());
+            log.setUri(request.getRequestURI());
+            log.setParameters(parameterMap);
+            log.setHeaders(retrieveHeaders(request));
+            log.setProject(retrieveProject(request.getRequestURI()));
+
+            logger.info("{}", JacksonUtil.write(log));
+        } catch (Exception e) {
+            logger.error("record access log error.", e);
         }
-
-        log.setTime(new DateTime().toString());
-        log.setIp(RequestContext.getRealIp(request));
-        log.setMethod(request.getMethod());
-        log.setUri(request.getRequestURI());
-        log.setParameters(parameterMap);
-        log.setHeaders(retrieveHeaders(request));
-        log.setProject(retrieveProject(request.getRequestURI()));
-
-        logger.info("log record. log info:{}", JacksonUtil.write(log));
 
         return super.preHandle(request, response, handler);
     }
@@ -102,8 +109,7 @@ public class AccessLogInterceptor extends HandlerInterceptorAdapter {
 
     @Data
     @NoArgsConstructor
-    @AllArgsConstructor
-    private class Log {
+    private static class AccessLog {
         private String id;
         private String time;
         private String ip;

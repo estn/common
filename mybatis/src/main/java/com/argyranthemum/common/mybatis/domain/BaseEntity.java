@@ -35,8 +35,8 @@ public class BaseEntity {
     /**
      * 数据修改时间，当insert和update操作时修改本字段值
      */
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
+    @TableField(value = "update_time", fill = FieldFill.UPDATE)
+    private Date updateTime = new Date();
 
     /**
      * 是否可用，标识数据的状态

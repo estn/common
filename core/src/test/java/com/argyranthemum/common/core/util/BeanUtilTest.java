@@ -1,5 +1,6 @@
 package com.argyranthemum.common.core.util;
 
+import com.argyranthemum.common.core.pojo.Result;
 import com.argyranthemum.common.core.util.enums.IncomeEnum;
 import com.argyranthemum.common.core.util.enums.IncomeRoleEnum;
 import com.argyranthemum.common.core.util.pojo.User;
@@ -20,6 +21,15 @@ import java.util.Map;
  */
 public class BeanUtilTest extends TestCase {
 
+    public void test001() {
+        for (int i = 0; i < 1; i++) {
+            Result result = HttpUtil.get("https://www.xbiquge6.com/90_90349/110136.html");
+            if (result.succeed) {
+                String data = result.getData();
+                System.out.println(HtmlUtil.find(data, "<div id=\\\"content\\\">((.)+?)</div>", "<br/><br/>"));
+            }
+        }
+    }
 
     public void testMergeList() throws Exception {
         List<User> users = Lists.newArrayList();
@@ -266,12 +276,12 @@ public class BeanUtilTest extends TestCase {
         _user.setIncomeRole2(IncomeRoleEnum.PLATFORM);
         UserPojo merge = BeanUtil.merge(_user, UserPojo.class);
 
-        Assert.assertEquals("PLATFORM",merge.getIncomeRole2());
+        Assert.assertEquals("PLATFORM", merge.getIncomeRole2());
 
     }
 
-    public void testBigNumber(){
-        User user =new User();
+    public void testBigNumber() {
+        User user = new User();
         user.setIncome(new BigDecimal("1.0"));
 
         UserPojo pojo = BeanUtil.merge(user, UserPojo.class);

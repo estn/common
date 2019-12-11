@@ -1,6 +1,7 @@
 package com.argyranthemum.common.core.constant;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Locale;
 
@@ -14,7 +15,7 @@ public class SystemConst {
     private SystemConst() {
     }
 
-    public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+    public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     public static final String UTF8 = "UTF-8";
 
@@ -60,5 +61,9 @@ public class SystemConst {
         String ROLE_USER = "ROLE_USER";
         String ROLE_VIP = "ROLE_VIP";
     }
+
+    public static final long START_CURSOR = 0;
+    public static final long END_CURSOR = -1;
+    public static final long MAX_CURSOR = Long.MAX_VALUE;
 
 }

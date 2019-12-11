@@ -3,7 +3,6 @@ package com.argyranthemum.common.api.interceptor;
 import com.argyranthemum.common.api.context.ParameterUtil;
 import com.argyranthemum.common.core.auth.Auth;
 import com.argyranthemum.common.core.auth.AuthToken;
-import com.argyranthemum.common.core.auth.TargetContext;
 import com.argyranthemum.common.core.auth.TokenContext;
 import com.argyranthemum.common.core.constant.ConfigurationConst;
 import com.argyranthemum.common.core.exception.BaseException;
@@ -86,9 +85,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             throw new BaseException(DefaultError.ACCESS_DENIED_ERROR);
         }
 
-        logger.debug("targetId:" + targetId);
-        TargetContext.set(targetId);
-
         //1.从parameter获取参数
         String authParameter = auth.parameter();
 
@@ -135,9 +131,8 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
-                                @Nullable Exception ex) throws Exception {
-        TargetContext.remove();
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) {
+        TokenContext.remove();
     }
 
 }
