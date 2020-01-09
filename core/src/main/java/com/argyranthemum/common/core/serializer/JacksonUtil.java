@@ -11,9 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
 
 public class JacksonUtil extends ObjectMapper {
 
@@ -35,7 +32,7 @@ public class JacksonUtil extends ObjectMapper {
         disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
         // 时间格式化输出
-        setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+//        setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 
         //针对特殊的字段进行设置序列化
         SimpleModule simpleModule = new SimpleModule();
@@ -51,7 +48,6 @@ public class JacksonUtil extends ObjectMapper {
         try {
             return getInstance().writeValueAsString(object);
         } catch (IOException e) {
-            e.printStackTrace();
             logger.error(e.toString(), e);
         }
         return null;
@@ -61,7 +57,6 @@ public class JacksonUtil extends ObjectMapper {
         try {
             return getInstance().readValue(content, valueType);
         } catch (IOException e) {
-            e.printStackTrace();
             logger.error(e.toString(), e);
         }
         return null;
@@ -71,17 +66,9 @@ public class JacksonUtil extends ObjectMapper {
         try {
             return getInstance().readValue(content, valueType);
         } catch (IOException e) {
-            e.printStackTrace();
             logger.error(e.toString(), e);
         }
         return null;
     }
-
-    public static void main(String[] args) {
-        Map map = new HashMap();
-        map.put("a", null);
-        System.out.println(JacksonUtil.write(map));
-    }
-
 
 }

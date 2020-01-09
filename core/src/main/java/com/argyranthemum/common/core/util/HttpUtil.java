@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class HttpUtil {
 
     //默认字符集
     private static final String CHARSET = "UTF-8";
-    private static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+    private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     //数据传输超时时间
     private static int DEFAULT_SOCKET_TIMEOUT = 30 * 1000;
@@ -84,11 +85,19 @@ public class HttpUtil {
     }
 
     public static Result get(String url) {
-        return get(url, null, DEFAULT_CONNECTION_TIMEOUT);
+        return get(url, null, DEFAULT_CONNECTION_TIMEOUT, CHARSET);
+    }
+
+    public static Result get(String url, String charset) {
+        return get(url, null, DEFAULT_CONNECTION_TIMEOUT, charset);
     }
 
     public static Result get(String url, Map<String, Object> param) {
-        return get(url, param, DEFAULT_CONNECTION_TIMEOUT);
+        return get(url, param, DEFAULT_CONNECTION_TIMEOUT, CHARSET);
+    }
+
+    public static Result get(String url, Map<String, Object> param, String charset) {
+        return get(url, param, DEFAULT_CONNECTION_TIMEOUT, charset);
     }
 
     /**
@@ -98,7 +107,7 @@ public class HttpUtil {
      * @param param 请求参数
      * @return 字符串结果
      */
-    public static Result get(String url, Map<String, Object> param, int timeout) {
+    public static Result get(String url, Map<String, Object> param, int timeout, String charset) {
         HttpGet httpGet = null;
         CloseableHttpResponse response = null;
         Result result;
@@ -112,7 +121,7 @@ public class HttpUtil {
 
             response = client.execute(httpGet);
             int statusCode = response.getStatusLine().getStatusCode();
-            result = new Result(statusCode, IOUtils.toString(response.getEntity().getContent(), CHARSET));
+            result = new Result(statusCode, IOUtils.toString(response.getEntity().getContent(), charset));
         } catch (Exception e) {
             result = new Result(500, e.getMessage());
             logger.error(e.toString(), e);

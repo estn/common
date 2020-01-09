@@ -2,16 +2,11 @@ package com.argyranthemum.common.api.context;
 
 import com.argyranthemum.common.core.pojo.Platform;
 import com.argyranthemum.common.core.pojo.Version;
-import com.argyranthemum.common.core.support.SignSupport;
-import com.argyranthemum.common.core.util.encrypt.MD5Util;
-import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.NamedThreadLocal;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.Map;
 
 
 /**
@@ -26,10 +21,12 @@ public class RequestContext {
     public static final String DEVICE_ID = "deviceId";
     public static final String TOKEN = "token";
     public static final String TIMESTAMP = "timestamp";
-    public static final String STAMP = "stamp";
+    public static final String NONCE = "nonce";
     public static final String SIGN = "sign";
     public static final String DEBUG = "debug";
     public static final String SECRET = "secret";
+    public static final String UA = "ua";
+    public static final String APP_ID = "appId";
 
     private static final ThreadLocal<RequestContextHolder> requestThreadLocal = new NamedThreadLocal<>("Request ThreadLocal");
 
@@ -58,7 +55,7 @@ public class RequestContext {
         }
 
         String debugString = request.getParameter(DEBUG);
-        Boolean debug = false;
+        boolean debug = false;
         if (StringUtils.isNotBlank(debugString)) {
             debug = Boolean.parseBoolean(debugString);
         }
@@ -71,10 +68,12 @@ public class RequestContext {
                 .setDeviceId(request.getParameter(DEVICE_ID))
                 .setToken(request.getParameter(TOKEN))
                 .setTimestamp(timestamp)
-                .setStamp(request.getParameter(STAMP))
+                .setNonce(request.getParameter(NONCE))
                 .setSign(request.getParameter(SIGN))
                 .setDebug(debug)
                 .setSecret(request.getParameter(SECRET))
+                .setUa(request.getParameter(UA))
+                .setAppId(request.getParameter(APP_ID))
                 .build();
 
         requestThreadLocal.set(holder);
@@ -120,11 +119,13 @@ public class RequestContext {
         private String deviceId;    //设备ID
         private String token;       //TOKEN值
         private Long timestamp;     //时间戳
-        private String stamp;       //邮戳唯一值
+        private String nonce;       //邮戳唯一值
         private String sign;        //签名值
         private Boolean debug;      //调试模式
         private String secret;
         private String ip;          //访问IP
+        private String ua;          //ua
+        private String appId;          //appId
         private HttpServletRequest request;
         private HttpServletResponse response;
 
@@ -151,8 +152,8 @@ public class RequestContext {
             return timestamp;
         }
 
-        public String getStamp() {
-            return stamp;
+        public String getNonce() {
+            return nonce;
         }
 
         public String getSign() {
@@ -163,12 +164,20 @@ public class RequestContext {
             return debug;
         }
 
+        public String getAppId() {
+            return appId;
+        }
+
         public String getSecret() {
             return secret;
         }
 
         public String getIp() {
             return ip;
+        }
+
+        public String getUa() {
+            return ua;
         }
 
         public HttpServletRequest getRequest() {
@@ -185,11 +194,13 @@ public class RequestContext {
             private String deviceId;    //设备ID
             private String token;       //TOKEN值
             private Long timestamp;     //时间戳
-            private String stamp;       //邮戳唯一值
+            private String nonce;       //邮戳唯一值
             private String sign;        //签名值
             private Boolean debug;      //调试模式
             private String secret;
             private String ip;          //访问IP
+            private String ua;          //ua
+            private String appId;          //appId
             private HttpServletRequest request;
             private HttpServletResponse response;
 
@@ -203,13 +214,15 @@ public class RequestContext {
                 holder.deviceId = this.deviceId;
                 holder.token = this.token;
                 holder.timestamp = this.timestamp;
-                holder.stamp = this.stamp;
+                holder.nonce = this.nonce;
                 holder.sign = this.sign;
                 holder.debug = this.debug;
                 holder.secret = this.secret;
                 holder.ip = this.ip;
                 holder.request = this.request;
                 holder.response = this.response;
+                holder.ua = this.ua;
+                holder.appId = this.appId;
                 return holder;
             }
 
@@ -239,8 +252,8 @@ public class RequestContext {
                 return this;
             }
 
-            public Builder setStamp(String stamp) {
-                this.stamp = stamp;
+            public Builder setNonce(String nonce) {
+                this.nonce = nonce;
                 return this;
             }
 
@@ -271,6 +284,16 @@ public class RequestContext {
 
             public Builder setResponse(HttpServletResponse response) {
                 this.response = response;
+                return this;
+            }
+
+            public Builder setUa(String ua) {
+                this.ua = ua;
+                return this;
+            }
+
+            public Builder setAppId(String appId) {
+                this.appId = appId;
                 return this;
             }
         }

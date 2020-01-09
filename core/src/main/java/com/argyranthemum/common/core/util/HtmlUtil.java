@@ -16,8 +16,11 @@ public class HtmlUtil {
         Matcher matcher = p.matcher(content);
         if (matcher.find()) {
             String group = matcher.group(1);
-            String text = HtmlUtil.removeHtml(group);
-            return replace(text, symbol);
+            Pattern brPattern = Pattern.compile("<br\\s*/?>", Pattern.CASE_INSENSITIVE);
+            Matcher m = brPattern.matcher(group);
+            group = m.replaceAll("\\\r\\\n");
+
+            return HtmlUtil.removeHtml(group);
         }
         return null;
     }
@@ -25,7 +28,14 @@ public class HtmlUtil {
     public static String replace(String content, String symbol) {
         Pattern p = Pattern.compile("\\s+");
         Matcher m = p.matcher(content);
-        return m.replaceAll(symbol);
+
+        String[] strings = p.split(content);
+        for (String string : strings) {
+            logger.info(string);
+        }
+        String result = m.replaceAll(symbol);
+        logger.info("result:{}", result);
+        return result;
     }
 
     public static String removeHtml(String content) {
