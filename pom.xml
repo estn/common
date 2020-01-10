@@ -48,16 +48,6 @@
             </dependency>
             <dependency>
                 <groupId>com.argyranthemum.common</groupId>
-                <artifactId>common-domain</artifactId>
-                <version>${common.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.argyranthemum.common</groupId>
-                <artifactId>common-dao</artifactId>
-                <version>${common.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.argyranthemum.common</groupId>
                 <artifactId>common-api</artifactId>
                 <version>${common.version}</version>
             </dependency>
@@ -74,6 +64,11 @@
             <dependency>
                 <groupId>com.argyranthemum.common</groupId>
                 <artifactId>common-redis</artifactId>
+                <version>${common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.argyranthemum.common</groupId>
+                <artifactId>common-mybatis</artifactId>
                 <version>${common.version}</version>
             </dependency>
             <!-- |common| end -->
