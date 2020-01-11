@@ -1,7 +1,6 @@
 package com.argyranthemum.common.mybatis.domain;
 
 
-import com.argyranthemum.common.core.util.UUIDUtil;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -48,11 +47,4 @@ public class BaseEntity {
     @TableLogic(value = "1", delval = "0")
     @TableField(select = false)
     private Integer available = 1;
-
-    /**
-     * UUID，唯一代表一条记录信息
-     */
-    private String uuid = UUIDUtil.random();
-
-
 }
