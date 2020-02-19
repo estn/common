@@ -4,6 +4,7 @@
  */
 package com.argyranthemum.common.api.interceptor;
 
+import com.argyranthemum.common.core.exception.BaseException;
 import com.argyranthemum.common.core.support.SignSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,7 @@ public class ParameterContextInterceptor extends HandlerInterceptorAdapter {
         Map<String, Object> map = SignSupport.convert(request.getParameterMap());
         for (String parameter : parameters) {
             if (!map.containsKey(parameter)) {
-                throw new IllegalArgumentException(parameter + " is miss");
+                throw new BaseException(parameter + " is miss");
             }
         }
         return super.preHandle(request, response, handler);

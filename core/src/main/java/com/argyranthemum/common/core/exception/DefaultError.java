@@ -15,7 +15,7 @@ public enum DefaultError implements CommonError {
     TIMESTAMP_ERROR("0010", "时间戳不正确"),
     SIGN_ERROR("0011", "签名错误"),
 
-    METHOD_NOT_SUPPORTED_ERROR("0008", "请求方法错误"),
+    METHOD_NOT_SUPPORTED_ERROR("0012", "请求方法错误"),
 
     ;
 

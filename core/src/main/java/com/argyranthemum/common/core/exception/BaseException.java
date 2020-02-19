@@ -1,6 +1,7 @@
 package com.argyranthemum.common.core.exception;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.helpers.MessageFormatter;
 
 /**
@@ -43,7 +44,7 @@ public class BaseException extends RuntimeException {
     }
 
     public BaseException(CommonError error, Object... message) {
-        super(format(error, message));
+        super(error.getErrorMessage() + " | " + StringUtils.join(message, ","));
         this.error = error;
     }
 
@@ -59,16 +60,6 @@ public class BaseException extends RuntimeException {
 
     public CommonError getError() {
         return error;
-    }
-
-
-    @Override
-    public String toString() {
-        return "BaseException, [" + error.getErrorCode() + ", " + getMessage() + "]";
-    }
-
-    private static String format(CommonError error, Object... message) {
-        return format(error.getErrorMessage(), message);
     }
 
     private static String format(String template, Object... message) {
