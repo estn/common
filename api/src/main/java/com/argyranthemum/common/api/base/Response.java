@@ -7,12 +7,21 @@
  */
 package com.argyranthemum.common.api.base;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @author estn.zuo
  * @description API返回数据结构
  * @date 2013-6-24
  */
+@Data
 public class Response {
+
+    @JsonIgnore
+    private int status = HttpServletResponse.SC_OK;
 
     /**
      * 返回状态码
@@ -29,28 +38,4 @@ public class Response {
      * 数据返回节点
      */
     private Object data;
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public Object getData() {
-        return data;
-    }
-
-    public void setData(Object data) {
-        this.data = data;
-    }
-
-    public String getBuild() {
-        return build;
-    }
-
-    public void setBuild(String build) {
-        this.build = build;
-    }
 }

@@ -32,9 +32,10 @@ public class ServerExceptionResolver extends AbstractHandlerExceptionResolver {
         try {
             response.setContentType(contentType);
             //HTTP状态码始终返回200
-            response.setStatus(HttpServletResponse.SC_OK);
+            Response _response = this.handleException(ex);
+            response.setStatus(_response.getStatus());
             pw = response.getWriter();
-            pw.write(JacksonUtil.getInstance().writeValueAsString(handleException(ex)));
+            pw.write(JacksonUtil.getInstance().writeValueAsString(_response));
         } catch (IOException e) {
             logger.error(e.toString(), e);
         } finally {
@@ -62,12 +63,15 @@ public class ServerExceptionResolver extends AbstractHandlerExceptionResolver {
         else if (ex instanceof AccessDeniedException) {
             response.setCode(DefaultError.ACCESS_DENIED_ERROR.getErrorCode());
             response.setData(DefaultError.ACCESS_DENIED_ERROR.getErrorMessage());
-        } else if (ex instanceof HttpRequestMethodNotSupportedException) {
+        }
+        // 请求方法错误
+        else if (ex instanceof HttpRequestMethodNotSupportedException) {
             response.setCode(DefaultError.METHOD_NOT_SUPPORTED_ERROR.getErrorCode());
             response.setData(DefaultError.METHOD_NOT_SUPPORTED_ERROR.getErrorMessage());
         }
-        // 系统自带异常，主要指JVM抛出的异常
+        // 系统自带异常，主要指JVM抛出的异常 返回500 前端Nginx检查到
         else {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.setCode(DefaultError.SYSTEM_INTERNAL_ERROR.getErrorCode());
             response.setData(DefaultError.SYSTEM_INTERNAL_ERROR.getErrorMessage());
             if (!ConfigurationConst.IS_RELEASE) {

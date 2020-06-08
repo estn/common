@@ -4,7 +4,7 @@ public enum DefaultError implements CommonError {
 
     SYSTEM_INTERNAL_ERROR("0001", "系统内部错误"),
     ACCESS_DENIED_ERROR("0002", "拒绝访问"),
-    HTTP_STATUS_404("0003", "404异常 PATH:{}"),
+    HTTP_STATUS_404("0003", "404异常"),
 
     TOKEN_NOT_FOUND("0004", "未找到访问令牌"),
     TOKEN_ERROR("0005", "访问令牌错误"),
@@ -14,9 +14,7 @@ public enum DefaultError implements CommonError {
     DUPLICATE_NONCE("0009", "随机字符串重复"),
     TIMESTAMP_ERROR("0010", "时间戳不正确"),
     SIGN_ERROR("0011", "签名错误"),
-
     METHOD_NOT_SUPPORTED_ERROR("0012", "请求方法错误"),
-
     ;
 
     String errorCode;
