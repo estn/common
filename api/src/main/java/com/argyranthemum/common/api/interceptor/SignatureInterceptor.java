@@ -64,7 +64,7 @@ public class SignatureInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
 
-        String _secret = signatureService.getSecret();
+        String _secret = signatureService.getSecret(this.getAppId(param));
         if (StringUtils.isBlank(_secret)) {
             return false;
         }

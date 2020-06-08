@@ -12,7 +12,7 @@ public abstract class SignatureService {
 
     public abstract String getKey(String appId, String platform, String version);
 
-    public String getSecret() {
+    public String getSecret(String appId) {
         return null;
     }
 
