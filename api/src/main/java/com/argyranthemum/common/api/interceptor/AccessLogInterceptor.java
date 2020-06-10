@@ -65,7 +65,7 @@ public class AccessLogInterceptor extends HandlerInterceptorAdapter {
             }
 
             log.setTime(new DateTime().toString());
-            log.setIp(RequestContext.getRealIp(request));
+            log.setIp(RequestContext.get().getIp());
             log.setMethod(request.getMethod());
             log.setUri(request.getRequestURI());
             log.setParameters(parameterMap);

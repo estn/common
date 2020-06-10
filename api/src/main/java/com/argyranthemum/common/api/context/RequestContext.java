@@ -79,7 +79,7 @@ public class RequestContext {
         requestThreadLocal.set(holder);
     }
 
-    public static String getRealIp(HttpServletRequest request) {
+    private static String getRealIp(HttpServletRequest request) {
         String Xip = request.getHeader("X-Real-IP");
         String XFor = request.getHeader("X-Forwarded-For");
         if (StringUtils.isNotEmpty(XFor) && !"unKnown".equalsIgnoreCase(XFor)) {
