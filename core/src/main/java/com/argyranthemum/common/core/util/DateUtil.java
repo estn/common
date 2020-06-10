@@ -42,4 +42,11 @@ public class DateUtil {
         return new DateTime(date).plusDays(1).withTimeAtStartOfDay().plusSeconds(-1).toDate();
     }
 
+    public static DateTime startOfDay(DateTime date) {
+        return new DateTime(date).withTimeAtStartOfDay();
+    }
+
+    public static DateTime endOfDay(DateTime date) {
+        return new DateTime(date).plusDays(1).withTimeAtStartOfDay().plusSeconds(-1);
+    }
 }
