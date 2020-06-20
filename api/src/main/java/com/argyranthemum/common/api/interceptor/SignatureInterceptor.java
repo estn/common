@@ -10,7 +10,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,12 +27,9 @@ public class SignatureInterceptor extends HandlerInterceptorAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(SignatureInterceptor.class);
 
-    private List<String> appIds;
-
     private SignatureService signatureService;
 
-    public SignatureInterceptor(List<String> appIds, SignatureService signatureService) {
-        this.appIds = appIds;
+    public SignatureInterceptor(SignatureService signatureService) {
         this.signatureService = signatureService;
     }
 
@@ -46,8 +42,6 @@ public class SignatureInterceptor extends HandlerInterceptorAdapter {
         if (this.verifySecret(param)) {
             return true;
         }
-
-        this.verifyAppId(param);
 
         this.verifyTimestamp(param);
 
@@ -70,13 +64,6 @@ public class SignatureInterceptor extends HandlerInterceptorAdapter {
         }
 
         return secretObj.toString().equals(_secret);
-    }
-
-    private void verifyAppId(Map<String, Object> param) {
-        String appId = this.getAppId(param);
-        if (!this.appIds.contains(appId)) {
-            throw new BaseException(DefaultError.APP_ID_ERROR, appId);
-        }
     }
 
 
