@@ -1,6 +1,7 @@
 package com.argyranthemum.common.core.util;
 
 import com.argyranthemum.common.core.pojo.Result;
+import com.argyranthemum.common.core.serializer.JacksonUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -39,17 +40,18 @@ import java.util.Map;
  */
 public class HttpUtil {
 
-    private static Logger logger = LoggerFactory.getLogger(HttpUtil.class);
+    private static Logger logger = LoggerFactory.getLogger("http-client");
+    private static Logger statLogger = LoggerFactory.getLogger("http-stat");
 
     //默认字符集
     private static final String CHARSET = "UTF-8";
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     //数据传输超时时间
-    private static int DEFAULT_SOCKET_TIMEOUT = 30 * 1000;
+    private static int DEFAULT_SOCKET_TIMEOUT = 10 * 1000;
 
     //连接超时时间
-    private static int DEFAULT_CONNECTION_TIMEOUT = 30 * 1000;
+    private static int DEFAULT_CONNECTION_TIMEOUT = 10 * 1000;
 
     private static CloseableHttpClient client = null;
 
@@ -74,7 +76,7 @@ public class HttpUtil {
                     .setSSLSocketFactory(sslsf)
                     .setConnectionManager(cm)
                     .build();
-
+            logger.info("config http client success");
         } catch (Exception e) {
             logger.error(e.toString(), e);
         }
@@ -110,7 +112,9 @@ public class HttpUtil {
     public static Result get(String url, Map<String, Object> param, int timeout, String charset) {
         HttpGet httpGet = null;
         CloseableHttpResponse response = null;
-        Result result;
+        Result result = null;
+        long startTime = System.currentTimeMillis();
+        int statusCode = 500;
         try {
             httpGet = new HttpGet(doGetURL(url, param));
 
@@ -118,15 +122,17 @@ public class HttpUtil {
                     .setSocketTimeout(DEFAULT_SOCKET_TIMEOUT)
                     .setConnectTimeout(timeout).build();//设置请求和传输超时时间
             httpGet.setConfig(requestConfig);
-
+            logger.info("start get request. url:{}, param:{}", url, JacksonUtil.write(param));
             response = client.execute(httpGet);
-            int statusCode = response.getStatusLine().getStatusCode();
+            statusCode = response.getStatusLine().getStatusCode();
             result = new Result(statusCode, IOUtils.toString(response.getEntity().getContent(), charset));
         } catch (Exception e) {
-            result = new Result(500, e.getMessage());
+            result = new Result(statusCode, e.getMessage());
             logger.error(e.toString(), e);
         } finally {
             release(httpGet, response);
+            logger.info("response for url:{}, param:{}. response:{}", url, JacksonUtil.write(param), result);
+            statLogger.info("{}, {}, {}, {}", "GET", url, statusCode, System.currentTimeMillis() - startTime);
         }
         return result;
     }
@@ -192,6 +198,8 @@ public class HttpUtil {
         HttpPost httpPost = null;
         CloseableHttpResponse response = null;
         Result result = null;
+        long startTime = System.currentTimeMillis();
+        int statusCode = 500;
         try {
             httpPost = new HttpPost(url);
 
@@ -216,15 +224,17 @@ public class HttpUtil {
             if (body != null) {
                 httpPost.setEntity(new StringEntity(body, DEFAULT_CHARSET));
             }
-
+            logger.info("start get request. url:{}, param:{}, body:{}", url, JacksonUtil.write(param), body);
             response = client.execute(httpPost);
-            int statusCode = response.getStatusLine().getStatusCode();
+            statusCode = response.getStatusLine().getStatusCode();
             result = new Result(statusCode, IOUtils.toString(response.getEntity().getContent(), CHARSET));
         } catch (IOException e) {
             result = new Result(500, e.getMessage());
             logger.error(e.toString(), e);
         } finally {
             release(httpPost, response);
+            logger.info("response for url:{}, param:{}, body:{}, response:{}", url, JacksonUtil.write(param), body, result);
+            statLogger.info("{}, {}, {}, {}", "POST", url, statusCode, System.currentTimeMillis() - startTime);
         }
         return result;
     }
@@ -241,6 +251,8 @@ public class HttpUtil {
         HttpPut httpPut = null;
         CloseableHttpResponse response = null;
         Result result = null;
+        long startTime = System.currentTimeMillis();
+        int statusCode = 500;
         try {
             httpPut = new HttpPut(url);
             httpPut.setEntity(doGetEntity(param));
@@ -250,14 +262,17 @@ public class HttpUtil {
                     .setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT).build();//设置请求和传输超时时间
             httpPut.setConfig(requestConfig);
 
+            logger.info("start get request. url:{}, param:{}", url, JacksonUtil.write(param));
             response = client.execute(httpPut);
-            int statusCode = response.getStatusLine().getStatusCode();
+            statusCode = response.getStatusLine().getStatusCode();
             result = new Result(statusCode, IOUtils.toString(response.getEntity().getContent(), CHARSET));
         } catch (Exception e) {
             result = new Result(500, e.getMessage());
             logger.error(e.toString(), e);
         } finally {
             release(httpPut, response);
+            logger.info("response for url:{}, param:{}, response:{}", url, JacksonUtil.write(param), result);
+            statLogger.info("{}, {}, {}, {}", "PUT", url, statusCode, System.currentTimeMillis() - startTime);
         }
         return result;
     }
@@ -273,25 +288,27 @@ public class HttpUtil {
         HttpDelete httpDelete = null;
         CloseableHttpResponse response = null;
         Result result = null;
+        long startTime = System.currentTimeMillis();
+        int statusCode = 500;
         try {
             httpDelete = new HttpDelete(doGetURL(url, param));
+            logger.info("start get request. url:{}, param:{}", url, JacksonUtil.write(param));
             response = client.execute(httpDelete);
-            int statusCode = response.getStatusLine().getStatusCode();
+            statusCode = response.getStatusLine().getStatusCode();
             result = new Result(statusCode, IOUtils.toString(response.getEntity().getContent(), CHARSET));
         } catch (Exception e) {
             result = new Result(500, e.getMessage());
             logger.error(e.toString(), e);
         } finally {
             release(httpDelete, response);
+            logger.info("response for url:{}, param:{}, response:{}", url, JacksonUtil.write(param), result);
+            statLogger.info("{}, {}, {}, {}", "DELETE", url, statusCode, System.currentTimeMillis() - startTime);
         }
         return result;
     }
 
     /**
      * 释放资源
-     *
-     * @param base
-     * @param response
      */
     private static void release(HttpRequestBase base, CloseableHttpResponse response) {
         try {
@@ -308,9 +325,6 @@ public class HttpUtil {
 
     /**
      * 将map集合封装成Entity对象
-     *
-     * @param param
-     * @return
      */
     private static HttpEntity doGetEntity(Map<String, Object> param) {
         if (param == null) {
@@ -354,9 +368,6 @@ public class HttpUtil {
         for (Map.Entry<String, Object> me : param.entrySet()) {
             if (me.getValue() != null) {
                 Object value = me.getValue();
-                if (value == null) {
-                    continue;
-                }
                 try {
                     sb.append(me.getKey()).append("=").append(URLEncoder.encode(value.toString(), CHARSET)).append("&");
                 } catch (UnsupportedEncodingException e) {
