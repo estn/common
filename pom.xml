@@ -73,35 +73,6 @@
             </dependency>
             <!-- |common| end -->
 
-            <!-- +++|spring|+++  start-->
-            <!--            <dependency>-->
-            <!--                <groupId>org.springframework</groupId>-->
-            <!--                <artifactId>spring-context</artifactId>-->
-            <!--                <version>${spring.version}</version>-->
-            <!--            </dependency>-->
-            <!--            <dependency>-->
-            <!--                <groupId>org.springframework</groupId>-->
-            <!--                <artifactId>spring-orm</artifactId>-->
-            <!--                <version>${spring.version}</version>-->
-            <!--            </dependency>-->
-            <!--            <dependency>-->
-            <!--                <groupId>org.springframework</groupId>-->
-            <!--                <artifactId>spring-beans</artifactId>-->
-            <!--                <version>${spring.version}</version>-->
-            <!--            </dependency>-->
-            <!--            <dependency>-->
-            <!--                <groupId>org.springframework</groupId>-->
-            <!--                <artifactId>spring-context-support</artifactId>-->
-            <!--                <version>${spring.version}</version>-->
-            <!--            </dependency>-->
-            <!--            <dependency>-->
-            <!--                <groupId>org.springframework</groupId>-->
-            <!--                <artifactId>spring-test</artifactId>-->
-            <!--                <version>${spring.version}</version>-->
-            <!--            </dependency>-->
-            <!-- |spring| end -->
-
-
             <!-- +++|mybatis-plus|+++  start-->
             <dependency>
                 <groupId>com.baomidou</groupId>
@@ -319,12 +290,12 @@
                         </execution>
                     </executions>
                 </plugin>
-                <!--                <plugin>-->
-                <!--                    &lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-maven-plugin &ndash;&gt;-->
-                <!--                    <groupId>org.springframework.boot</groupId>-->
-                <!--                    <artifactId>spring-boot-maven-plugin</artifactId>-->
-                <!--                    <version>2.1.9.RELEASE</version>-->
-                <!--                </plugin>-->
+                <plugin>
+                    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-maven-plugin -->
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>2.1.9.RELEASE</version>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
