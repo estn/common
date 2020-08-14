@@ -7,7 +7,7 @@
     <groupId>com.argyranthemum.common</groupId>
     <artifactId>common-root</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.4-RELEASE</version>
+    <version>1.0.5-RELEASE</version>
     <modules>
         <module>core</module>
         <module>jpa</module>
@@ -22,9 +22,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <common.version>1.0.4-RELEASE</common.version>
-        <spring.boot.version>2.1.9.RELEASE</spring.boot.version>
-        <spring.version>5.1.10.RELEASE</spring.version>
+        <common.version>1.0.5-RELEASE</common.version>
+        <spring.boot.version>2.3.2.RELEASE</spring.boot.version>
+        <!--        <spring.version>5.2.8.RELEASE</spring.version>-->
         <guava.version>28.0-jre</guava.version>
         <shiro.version>1.3.2</shiro.version>
         <mybatisplus.version>3.2.0</mybatisplus.version>
@@ -74,31 +74,31 @@
             <!-- |common| end -->
 
             <!-- +++|spring|+++  start-->
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-orm</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-beans</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context-support</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-test</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
+            <!--            <dependency>-->
+            <!--                <groupId>org.springframework</groupId>-->
+            <!--                <artifactId>spring-context</artifactId>-->
+            <!--                <version>${spring.version}</version>-->
+            <!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>org.springframework</groupId>-->
+            <!--                <artifactId>spring-orm</artifactId>-->
+            <!--                <version>${spring.version}</version>-->
+            <!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>org.springframework</groupId>-->
+            <!--                <artifactId>spring-beans</artifactId>-->
+            <!--                <version>${spring.version}</version>-->
+            <!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>org.springframework</groupId>-->
+            <!--                <artifactId>spring-context-support</artifactId>-->
+            <!--                <version>${spring.version}</version>-->
+            <!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>org.springframework</groupId>-->
+            <!--                <artifactId>spring-test</artifactId>-->
+            <!--                <version>${spring.version}</version>-->
+            <!--            </dependency>-->
             <!-- |spring| end -->
 
 
@@ -224,6 +224,12 @@
             </dependency>
             <!-- | excel | end -->
 
+            <!-- https://mvnrepository.com/artifact/joda-time/joda-time -->
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>2.10.4</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.htmlparser</groupId>
@@ -313,11 +319,12 @@
                         </execution>
                     </executions>
                 </plugin>
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>${spring.boot.version}</version>
-                </plugin>
+                <!--                <plugin>-->
+                <!--                    &lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-maven-plugin &ndash;&gt;-->
+                <!--                    <groupId>org.springframework.boot</groupId>-->
+                <!--                    <artifactId>spring-boot-maven-plugin</artifactId>-->
+                <!--                    <version>2.1.9.RELEASE</version>-->
+                <!--                </plugin>-->
             </plugins>
         </pluginManagement>
     </build>

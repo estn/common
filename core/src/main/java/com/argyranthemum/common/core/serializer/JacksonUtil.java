@@ -53,7 +53,7 @@ public class JacksonUtil extends ObjectMapper {
         return null;
     }
 
-    public static <T> T read(String content, TypeReference valueType) {
+    public static <T> T read(String content, TypeReference<T> valueType) {
         try {
             return getInstance().readValue(content, valueType);
         } catch (IOException e) {

@@ -16,12 +16,14 @@ import org.springframework.http.converter.AbstractHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class JacksonObjectMapperHttpMessageConvert extends AbstractHttpMessageConverter<Object> {
 
-    private static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+    private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     private Build build;
 
@@ -37,41 +39,43 @@ public class JacksonObjectMapperHttpMessageConvert extends AbstractHttpMessageCo
     }
 
     @Override
-    public boolean canRead(Class<?> clazz, MediaType mediaType) {
+    public boolean canRead(@Nullable Class<?> clazz, MediaType mediaType) {
         JavaType javaType = getJavaType(clazz);
         return JacksonUtil.getInstance().canDeserialize(javaType) && canRead(mediaType);
     }
 
     @Override
-    public boolean canWrite(Class<?> clazz, MediaType mediaType) {
+    public boolean canWrite(@Nullable Class<?> clazz, MediaType mediaType) {
         return true;
     }
 
     @Override
-    protected boolean supports(Class<?> clazz) {
+    protected boolean supports(@Nullable Class<?> clazz) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    protected Object readInternal(Class<?> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
+    protected Object readInternal(@Nullable Class<?> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
         JavaType javaType = getJavaType(clazz);
         try {
             return JacksonUtil.getInstance().readValue(inputMessage.getBody(), javaType);
         } catch (JsonProcessingException ex) {
-            throw new HttpMessageNotReadableException("Could not read JSON: " + ex.getMessage(), ex);
+            throw new RuntimeException("Could not read JSON: " + ex.getMessage(), ex);
         }
     }
 
     @Override
-    protected void writeInternal(Object object, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
+    protected void writeInternal(@Nullable Object object, @Nullable HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
         try {
             logger.debug("object" + object);
 
             if (object instanceof RawEntity) {
-                outputMessage.getBody().write(((RawEntity) object).getResult().getBytes("UTF-8"));
+                assert outputMessage != null;
+                outputMessage.getBody().write(((RawEntity) object).getResult().getBytes(StandardCharsets.UTF_8));
                 return;
             }
 
+            assert outputMessage != null;
             JacksonUtil.getInstance().writeValue(outputMessage.getBody(), this.handleResponse(object));
         } catch (JsonProcessingException ex) {
             logger.error("Could not write JSON: " + ex.getMessage(), ex);
