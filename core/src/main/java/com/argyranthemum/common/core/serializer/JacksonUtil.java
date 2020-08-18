@@ -48,27 +48,24 @@ public class JacksonUtil extends ObjectMapper {
         try {
             return getInstance().writeValueAsString(object);
         } catch (IOException e) {
-            logger.error(e.toString(), e);
+            throw new JacksonSerializerException("write object error" + object, e);
         }
-        return null;
     }
 
     public static <T> T read(String content, TypeReference<T> valueType) {
         try {
             return getInstance().readValue(content, valueType);
         } catch (IOException e) {
-            logger.error(e.toString(), e);
+            throw new JacksonSerializerException("read object error. content" + content + ". to:" + valueType, e);
         }
-        return null;
     }
 
     public static <T> T read(String content, Class<T> valueType) {
         try {
             return getInstance().readValue(content, valueType);
         } catch (IOException e) {
-            logger.error(e.toString(), e);
+            throw new JacksonSerializerException("read object error. content" + content + ". to:" + valueType, e);
         }
-        return null;
     }
 
 }
