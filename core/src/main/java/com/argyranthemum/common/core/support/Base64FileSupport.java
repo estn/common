@@ -5,17 +5,20 @@
 package com.argyranthemum.common.core.support;
 
 import com.argyranthemum.common.core.exception.BaseException;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.MemoryCacheImageInputStream;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.regex.Matcher;
@@ -66,7 +69,8 @@ public class Base64FileSupport {
         ImageInputStream imageInputstream = null;
 
         try {
-            byte[] bytes = new BASE64Decoder().decodeBuffer(base64String);
+
+            byte[] bytes =  Base64.decodeBase64(base64String);
             imageInputstream = new MemoryCacheImageInputStream(new ByteArrayInputStream(bytes));
             ImageIO.setUseCache(false);
             Iterator<ImageReader> it = ImageIO.getImageReaders(imageInputstream);
@@ -100,7 +104,7 @@ public class Base64FileSupport {
     public static void decoderBase64File(String base64Code, String targetPath) {
         FileOutputStream out = null;
         try {
-            byte[] buffer = new BASE64Decoder().decodeBuffer(base64Code);
+            byte[] buffer = Base64.decodeBase64(base64Code);
             out = new FileOutputStream(targetPath);
             out.write(buffer);
         } catch (Exception e) {
@@ -131,7 +135,7 @@ public class Base64FileSupport {
             byte[] buffer = new byte[(int) file.length()];
             inputFile.read(buffer);
             inputFile.close();
-            return new BASE64Encoder().encode(buffer);
+            return Base64.encodeBase64String(buffer);
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException("encodeBase64File error. e:{}", e);

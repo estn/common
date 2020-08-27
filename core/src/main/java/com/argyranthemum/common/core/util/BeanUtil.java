@@ -25,9 +25,9 @@ import java.util.*;
 
 
 /**
- * @Description: BeanUtil
- * @Author: estn.zuo
- * @CreateTime: 2016-06-12 21:43
+ * @description: BeanUtil
+ * @author: estn.zuo
+ * @createTime: 2016-06-12 21:43
  */
 public class BeanUtil {
 
@@ -125,7 +125,6 @@ public class BeanUtil {
      * @param source           源实体          (一般指前台传递的对象)
      * @param clazz            目标实体类型     (一般指POJO对象)
      * @param ignoreProperties 忽略字段集合
-     * @return
      */
     public static <T> T merge(Object source, Class<T> clazz, String[] ignoreProperties) {
         try {
@@ -196,9 +195,6 @@ public class BeanUtil {
 
     /**
      * Bean对象转换成Map对象
-     *
-     * @param bean
-     * @return
      */
     public static Map<String, Object> convert$Map(Object bean) {
         Preconditions.checkNotNull(bean);
@@ -233,11 +229,6 @@ public class BeanUtil {
 
     /**
      * Map对象转换成Bean对象
-     *
-     * @param clazz
-     * @param map
-     * @param <T>
-     * @return
      */
     public static <T> T convert$Bean(Class<T> clazz, Map<String, Object> map) {
 
@@ -274,23 +265,20 @@ public class BeanUtil {
 
     /**
      * 设置属性值
-     *
-     * @param bean
-     * @param name
-     * @param value
      */
     public static void setProperty(final Object bean, final String name, final Object value) {
         Preconditions.checkNotNull(bean, "bean is null");
         Preconditions.checkNotNull(name, "method name is null");
         Preconditions.checkNotNull(value, "value is null");
         Field field = ReflectionUtils.findField(bean.getClass(), name);
+        assert field != null;
         ReflectionUtils.makeAccessible(field);
         ReflectionUtils.setField(field, bean, value);
     }
 
     private static Object shouldConvertParameterType(Method method, Object value) {
         Class<?>[] parameterTypes = method.getParameterTypes();
-        if (parameterTypes == null || parameterTypes.length == 0) {
+        if (parameterTypes.length == 0) {
             return value;
         }
 
@@ -320,7 +308,7 @@ public class BeanUtil {
         }
 
         /*BigDecimal*/
-        else if (parameterType.getSuperclass() !=null && parameterType.getSuperclass().equals(BigDecimal.class)) {
+        else if (parameterType.getSuperclass() != null && parameterType.getSuperclass().equals(BigDecimal.class)) {
             value = new BigDecimal(value.toString());
         }
         return value;
@@ -370,9 +358,8 @@ public class BeanUtil {
                 }
                 return Boolean.valueOf(value.toString());
             case CHAR:
-                return value.toString().charAt(0);
             case CHARACTER:
-                return Character.valueOf(value.toString().charAt(0));
+                return value.toString().charAt(0);
             default:
                 return null;
         }
