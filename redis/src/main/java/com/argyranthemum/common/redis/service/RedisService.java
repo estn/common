@@ -1,7 +1,7 @@
 package com.argyranthemum.common.redis.service;
 
 import com.argyranthemum.common.core.serializer.JacksonUtil;
-import com.argyranthemum.common.redis.supplier.RedisSingleSupplier;
+import com.argyranthemum.common.redis.supplier.RedisSupplier;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -69,15 +69,15 @@ public class RedisService {
         return doConvert(value, clazz);
     }
 
-    public <T> T get(String key, Class<T> clazz, RedisSingleSupplier<T> supplier) {
+    public <T> T get(String key, Class<T> clazz, RedisSupplier<T> supplier) {
         return doGet(key, clazz, supplier);
     }
 
-    public <T> T get(String key, TypeReference<T> clazz, RedisSingleSupplier<T> supplier) {
+    public <T> T get(String key, TypeReference<T> clazz, RedisSupplier<T> supplier) {
         return doGet(key, clazz, supplier);
     }
 
-    private <T> T doGet(String key, Object clazz, RedisSingleSupplier<T> supplier) {
+    private <T> T doGet(String key, Object clazz, RedisSupplier<T> supplier) {
         check(key, supplier.getExpiration());
         String value = (String) redisTemplate.opsForValue().get(key);
         if (Objects.isNull(value)) {

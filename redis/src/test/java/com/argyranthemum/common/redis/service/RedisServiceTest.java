@@ -4,8 +4,9 @@
  */
 package com.argyranthemum.common.redis.service;
 
+import com.argyranthemum.common.core.serializer.TypeRef;
 import com.argyranthemum.common.redis.RedisAutoConfigureTest;
-import com.argyranthemum.common.redis.supplier.RedisSingleSupplier;
+import com.argyranthemum.common.redis.supplier.RedisSupplier;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.Lists;
 import org.junit.Test;
@@ -46,7 +47,7 @@ public class RedisServiceTest extends RedisAutoConfigureTest {
         });
         System.out.println(a);
 
-        redisService.get("c", List.class, new RedisSingleSupplier<>(10, TimeUnit.MINUTES, () -> Lists.newArrayList("a", "B")));
+        redisService.get("c", List.class, new RedisSupplier<>(10, TimeUnit.MINUTES, () -> Lists.newArrayList("a", "B")));
     }
 
     @Test
@@ -55,9 +56,10 @@ public class RedisServiceTest extends RedisAutoConfigureTest {
 
     @Test
     public void set() {
-        redisService.set("b", 1);
-        Integer b = redisService.get("b", new TypeReference<Integer>() {
-        });
+        redisService.set("b", "1,2");
+        redisService.set("c", Lists.newArrayList(1, 1, 2));
+        List<Object> b = redisService.get("b", TypeRef.LIST_OBJ);
+        List<Integer> c = redisService.get("c", new TypeRef<List<Integer>>().T);
         System.out.println(b);
     }
 
