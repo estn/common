@@ -2,7 +2,6 @@ package com.argyranthemum.common.core.exception;
 
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.helpers.MessageFormatter;
 
 /**
  * 系统异常，自定义异常必须继承本类,业务模块需要抛出业务异常时使用该异常。
@@ -17,7 +16,6 @@ public class BaseException extends RuntimeException {
 
     private CommonError error = DefaultError.SYSTEM_INTERNAL_ERROR;
 
-
     public BaseException() {
     }
 
@@ -29,8 +27,8 @@ public class BaseException extends RuntimeException {
         super(message, cause);
     }
 
-    public BaseException(String template, Object... args) {
-        super(format(template, args));
+    public BaseException(String template, Object... message) {
+        super(template + " | " + StringUtils.join(message, ","));
     }
 
     public BaseException(Throwable cause) {
@@ -60,12 +58,5 @@ public class BaseException extends RuntimeException {
 
     public CommonError getError() {
         return error;
-    }
-
-    private static String format(String template, Object... message) {
-        int length = message.length;
-        Object[] objects = new Object[length];
-        System.arraycopy(message, 0, objects, 0, message.length);
-        return MessageFormatter.arrayFormat(template, objects).getMessage();
     }
 }

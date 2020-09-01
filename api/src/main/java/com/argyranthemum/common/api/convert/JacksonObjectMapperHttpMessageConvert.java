@@ -1,6 +1,5 @@
 package com.argyranthemum.common.api.convert;
 
-import com.argyranthemum.common.api.base.Build;
 import com.argyranthemum.common.api.base.RawEntity;
 import com.argyranthemum.common.api.base.Response;
 import com.argyranthemum.common.core.serializer.JacksonUtil;
@@ -21,18 +20,13 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import static com.argyranthemum.common.api.base.Response.MSG_SUCCESS;
+
 public class JacksonObjectMapperHttpMessageConvert extends AbstractHttpMessageConverter<Object> {
 
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
-    private Build build;
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    public JacksonObjectMapperHttpMessageConvert(Build build) {
-        super(new MediaType("application", "json", DEFAULT_CHARSET));
-        this.build = build;
-    }
+    private static final Logger logger = LoggerFactory.getLogger(JacksonObjectMapperHttpMessageConvert.class);
 
     public JacksonObjectMapperHttpMessageConvert() {
         super(new MediaType("application", "json", DEFAULT_CHARSET));
@@ -67,7 +61,7 @@ public class JacksonObjectMapperHttpMessageConvert extends AbstractHttpMessageCo
     @Override
     protected void writeInternal(@Nullable Object object, @Nullable HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
         try {
-            logger.debug("object" + object);
+            logger.debug("object. {}", object);
 
             if (object instanceof RawEntity) {
                 assert outputMessage != null;
@@ -90,10 +84,8 @@ public class JacksonObjectMapperHttpMessageConvert extends AbstractHttpMessageCo
     private Response handleResponse(Object object) {
         logger.debug("handle object with json  object : " + object);
         Response response = new Response();
+        response.setMsg(MSG_SUCCESS);
         response.setData(object);
-        if (build != null) {
-            response.setBuild(build.acquireBuild());
-        }
         return response;
     }
 

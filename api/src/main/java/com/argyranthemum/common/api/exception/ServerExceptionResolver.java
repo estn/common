@@ -21,7 +21,7 @@ public class ServerExceptionResolver extends AbstractHandlerExceptionResolver {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private String contentType;
+    private String contentType = "application/json;charset=UTF-8";
 
     @Override
     protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
@@ -30,12 +30,12 @@ public class ServerExceptionResolver extends AbstractHandlerExceptionResolver {
 
         PrintWriter pw = null;
         try {
-            response.setContentType(contentType);
-            //HTTP状态码始终返回200
             Response _response = this.handleException(ex);
+
+            response.setContentType(contentType);
             response.setStatus(_response.getStatus());
             pw = response.getWriter();
-            pw.write(JacksonUtil.getInstance().writeValueAsString(_response));
+            pw.write(JacksonUtil.write(_response));
         } catch (IOException e) {
             logger.error(e.toString(), e);
         } finally {
@@ -57,27 +57,28 @@ public class ServerExceptionResolver extends AbstractHandlerExceptionResolver {
         if (ex instanceof BaseException) {
             BaseException bbe = (BaseException) ex;
             response.setCode(bbe.getError().getErrorCode());
-            response.setData(bbe.getMessage());
+            response.setMsg(bbe.getError().getErrorMessage());
         }
         // 拒绝访问异常，当权限不足时发生
         else if (ex instanceof AccessDeniedException) {
             response.setCode(DefaultError.ACCESS_DENIED_ERROR.getErrorCode());
-            response.setData(DefaultError.ACCESS_DENIED_ERROR.getErrorMessage());
+            response.setMsg(DefaultError.ACCESS_DENIED_ERROR.getErrorMessage());
         }
         // 请求方法错误
         else if (ex instanceof HttpRequestMethodNotSupportedException) {
             response.setCode(DefaultError.METHOD_NOT_SUPPORTED_ERROR.getErrorCode());
-            response.setData(DefaultError.METHOD_NOT_SUPPORTED_ERROR.getErrorMessage());
+            response.setMsg(DefaultError.METHOD_NOT_SUPPORTED_ERROR.getErrorMessage());
         }
         // 系统自带异常，主要指JVM抛出的异常 返回500 前端Nginx检查到
         else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.setCode(DefaultError.SYSTEM_INTERNAL_ERROR.getErrorCode());
-            response.setData(DefaultError.SYSTEM_INTERNAL_ERROR.getErrorMessage());
+            response.setMsg(DefaultError.SYSTEM_INTERNAL_ERROR.getErrorMessage());
+
             if (!ConfigurationConst.IS_RELEASE) {
                 String message = ex.getMessage();
                 message = message == null ? "NullPointException" : message;
-                response.setData(message);
+                response.setMsg(message);
             }
         }
 

@@ -36,7 +36,6 @@ public class WebMvcConfigurerSupport implements WebMvcConfigurer {
     @Override
     public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
         ServerExceptionResolver resolver = new ServerExceptionResolver();
-        resolver.setContentType("application/json;charset=UTF-8");
         exceptionResolvers.add(resolver);
     }
 

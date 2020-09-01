@@ -21,6 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 public class Response {
 
     @JsonIgnore
+    public static final String MSG_SUCCESS = "success";
+
+    @JsonIgnore
     private int status = HttpServletResponse.SC_OK;
 
     /**
@@ -30,9 +33,9 @@ public class Response {
     private String code = "ACK.0001";
 
     /**
-     * 构建版本号各分类之间使用"|"分隔
+     * 状态码说明
      */
-    private String build;
+    private String msg;
 
     /**
      * 数据返回节点
