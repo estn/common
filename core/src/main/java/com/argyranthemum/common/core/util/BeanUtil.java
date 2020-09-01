@@ -5,7 +5,6 @@
 package com.argyranthemum.common.core.util;
 
 import com.argyranthemum.common.core.exception.BaseException;
-import com.argyranthemum.common.core.pojo.BasicType;
 import com.argyranthemum.common.core.util.pattern.handler.concrete.DateHandlerSupport;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -21,7 +20,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -371,5 +375,37 @@ public class BeanUtil {
             return enumSet.toArray()[Integer.parseInt(v.toString())];
         }
         return Enum.valueOf(parameterType, v.toString());
+    }
+
+
+    /**
+     * 基本变量类型的枚举
+     */
+    private enum BasicType {
+        BYTE, SHORT, INT, INTEGER, LONG, DOUBLE, FLOAT, BOOLEAN, CHAR, CHARACTER, STRING;
+
+        /**
+         * 原始类型为Key，包装类型为Value，例如： int.class -> Integer.class.
+         */
+        public static final Map<Class<?>, Class<?>> wrapperPrimitiveMap = new HashMap<Class<?>, Class<?>>(8);
+        /**
+         * 包装类型为Key，原始类型为Value，例如： Integer.class -> int.class.
+         */
+        public static final Map<Class<?>, Class<?>> primitiveWrapperMap = new HashMap<Class<?>, Class<?>>(8);
+
+        static {
+            wrapperPrimitiveMap.put(Boolean.class, boolean.class);
+            wrapperPrimitiveMap.put(Byte.class, byte.class);
+            wrapperPrimitiveMap.put(Character.class, char.class);
+            wrapperPrimitiveMap.put(Double.class, double.class);
+            wrapperPrimitiveMap.put(Float.class, float.class);
+            wrapperPrimitiveMap.put(Integer.class, int.class);
+            wrapperPrimitiveMap.put(Long.class, long.class);
+            wrapperPrimitiveMap.put(Short.class, short.class);
+
+            for (Map.Entry<Class<?>, Class<?>> entry : wrapperPrimitiveMap.entrySet()) {
+                primitiveWrapperMap.put(entry.getValue(), entry.getKey());
+            }
+        }
     }
 }
