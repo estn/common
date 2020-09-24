@@ -5,10 +5,12 @@
 package com.argyranthemum.common.core.util;
 
 import com.argyranthemum.common.core.exception.BaseException;
+import com.argyranthemum.common.core.serializer.JacksonUtil;
 import com.argyranthemum.common.core.util.pattern.handler.concrete.DateHandlerSupport;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -407,5 +409,77 @@ public class BeanUtil {
                 primitiveWrapperMap.put(entry.getValue(), entry.getKey());
             }
         }
+    }
+
+    /**
+     * 截取对象字段长度
+     */
+    public static Object cropFieldLength(Object obj, Map<String, Integer> fieldLength) {
+        return cropFieldLength(obj, fieldLength, "");
+    }
+
+    public static Object cropFieldLength(Object obj, Map<String, Integer> fieldLength, String appendStr) {
+        Field[] fields = obj.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            String typeName = field.getType().getName();
+
+            if ("java.lang.String".equals(typeName)) {
+                field.setAccessible(true);
+                try {
+                    Object valueObj = field.get(obj);
+
+                    if (valueObj == null) {
+                        continue;
+                    }
+
+                    String value = valueObj.toString();
+                    if (StringUtils.isBlank(value)) {
+                        continue;
+                    }
+
+                    Integer len = fieldLength.get(field.getName());
+                    if (len != null) {
+                        if (value.length() > len) {
+                            field.set(obj, value.substring(0, len) + appendStr);
+                        }
+                    }
+                } catch (IllegalAccessException e) {
+                    logger.warn("cut field error. field name is :{}.", field.getName());
+                }
+            }
+
+            // handle list with jackson
+            if ("java.util.List".equals(typeName)) {
+                field.setAccessible(true);
+                try {
+                    Object valueObj = field.get(obj);
+                    if (valueObj == null) {
+                        continue;
+                    }
+
+                    List values = (List) valueObj;
+                    if (values.size() == 0) {
+                        continue;
+                    }
+
+                    Integer len = fieldLength.get(field.getName());
+                    if (len != null && JacksonUtil.write(values).length() > len) {
+                        List newList = Lists.newArrayList();
+                        for (Object object : values) {
+                            newList.add(object);
+                            if (JacksonUtil.write(newList).length() > len) {
+                                newList.remove(object);
+                                field.set(obj, newList);
+                                break;
+                            }
+
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.warn("cut field error. field name is :{}.", field.getName());
+                }
+            }
+        }
+        return obj;
     }
 }

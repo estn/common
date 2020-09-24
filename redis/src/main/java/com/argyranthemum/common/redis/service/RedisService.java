@@ -239,12 +239,12 @@ public class RedisService {
         return doConvert(value, clazz);
     }
 
-    public void lset(String key, Object value) {
+    public void lpush(String key, Object value) {
         value = serialize(value);
         redisTemplate.opsForList().rightPush(key, value);
     }
 
-    public void lset(String key, Object value, long time, TimeUnit unit) {
+    public void lpush(String key, Object value, long time, TimeUnit unit) {
         value = serialize(value);
         redisTemplate.opsForList().rightPush(key, value);
         expire(key, time, unit);

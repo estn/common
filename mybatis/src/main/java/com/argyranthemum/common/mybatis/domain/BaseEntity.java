@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -44,6 +45,7 @@ public class BaseEntity {
      * <p/>
      * 1:可用(默认值)
      */
+    @JsonIgnore
     @TableLogic(value = "1", delval = "0")
     @TableField(select = false)
     private Integer available = 1;

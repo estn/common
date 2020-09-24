@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 public class Response {
 
     @JsonIgnore
-    public static final String MSG_SUCCESS = "success";
+    public static final String MSG_SUCCESS = "succ";
 
     @JsonIgnore
     private int status = HttpServletResponse.SC_OK;

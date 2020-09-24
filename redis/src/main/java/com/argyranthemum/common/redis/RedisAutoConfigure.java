@@ -2,7 +2,6 @@ package com.argyranthemum.common.redis;
 
 import com.argyranthemum.common.redis.lock.RedisLock;
 import com.argyranthemum.common.redis.service.RedisService;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +13,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import javax.annotation.Resource;
 
-@EnableAutoConfiguration
 @Configuration
 @ConditionalOnClass(RedisOperations.class)
 public class RedisAutoConfigure {
