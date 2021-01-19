@@ -67,10 +67,8 @@ public class Base64FileSupport {
      */
     public static String getBase64StringExtension(String base64String) {
         ImageInputStream imageInputstream = null;
-
         try {
-
-            byte[] bytes =  Base64.decodeBase64(base64String);
+            byte[] bytes = Base64.decodeBase64(base64String);
             imageInputstream = new MemoryCacheImageInputStream(new ByteArrayInputStream(bytes));
             ImageIO.setUseCache(false);
             Iterator<ImageReader> it = ImageIO.getImageReaders(imageInputstream);
@@ -79,16 +77,15 @@ public class Base64FileSupport {
                 imageReader.setInput(imageInputstream, true, true);
                 return imageReader.getFormatName().trim().toLowerCase();
             }
-
         } catch (IOException e) {
-            logger.error("parse suffix error.e:{}", e);
+            logger.error("parse suffix error.", e);
             throw new BaseException("parse suffix error.");
         } finally {
             if (imageInputstream != null) {
                 try {
                     imageInputstream.close();
                 } catch (IOException e) {
-                    logger.error("e:{}", e);
+                    logger.error("e", e);
                 }
             }
         }
@@ -115,7 +112,7 @@ public class Base64FileSupport {
                     out.close();
                 }
             } catch (IOException e) {
-                logger.error("close FileOutputStream errir . e:{}", e);
+                logger.error("close FileOutputStream error", e);
             }
         }
 
@@ -137,15 +134,13 @@ public class Base64FileSupport {
             inputFile.close();
             return Base64.encodeBase64String(buffer);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new BaseException("encodeBase64File error. e:{}", e);
         } finally {
             if (inputFile != null) {
                 try {
                     inputFile.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
-                    logger.error(" inputFile close error. e:{}", e);
+                    logger.error(" inputFile close error.", e);
                 }
             }
         }
