@@ -26,6 +26,20 @@ public class DateUtil {
         }
     }
 
+    public static String getDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(new Date());
+    }
+
+    public static String getDate(DateTime dateTime) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(dateTime.toDate());
+    }
+
+    public static int getYear() {
+        return new DateTime().getYear();
+    }
+
     public static Date startOfDay() {
         return new DateTime().withTimeAtStartOfDay().toDate();
     }
