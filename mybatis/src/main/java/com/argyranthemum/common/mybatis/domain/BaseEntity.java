@@ -7,11 +7,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
 
@@ -22,9 +19,6 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-@SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
 public class BaseEntity {
 
     private static final long serialVersionUID = 2820473684086191843L;
