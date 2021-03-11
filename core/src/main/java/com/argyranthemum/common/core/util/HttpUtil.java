@@ -8,13 +8,19 @@ import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -222,7 +228,7 @@ public class HttpUtil {
 
             /** 3.设置请求体 */
             if (body != null) {
-                httpPost.setEntity(new StringEntity(body, DEFAULT_CHARSET));
+                httpPost.setEntity(new StringEntity(body, ContentType.create(ContentType.APPLICATION_JSON.getMimeType(), DEFAULT_CHARSET)));
             }
             logger.info("start get request. url:{}, param:{}, body:{}", url, JacksonUtil.write(param), body);
             response = client.execute(httpPost);
