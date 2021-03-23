@@ -57,7 +57,7 @@ public class ServerExceptionResolver extends AbstractHandlerExceptionResolver {
         if (ex instanceof BaseException) {
             BaseException bbe = (BaseException) ex;
             response.setCode(bbe.getError().getErrorCode());
-            response.setMsg(bbe.getError().getErrorMessage());
+            response.setMsg(((BaseException) ex).getExceptionMessage());
         }
         // 拒绝访问异常，当权限不足时发生
         else if (ex instanceof AccessDeniedException) {

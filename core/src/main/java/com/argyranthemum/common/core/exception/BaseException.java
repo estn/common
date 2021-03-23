@@ -16,47 +16,61 @@ public class BaseException extends RuntimeException {
 
     private CommonError error = DefaultError.SYSTEM_INTERNAL_ERROR;
 
+    private String exceptionMessage;
+
     public BaseException() {
     }
 
     public BaseException(String message) {
         super(message);
+        this.exceptionMessage = message;
     }
 
     public BaseException(String message, Throwable cause) {
         super(message, cause);
+        this.exceptionMessage = message;
     }
 
     public BaseException(String template, Object... message) {
         super(template + " | " + StringUtils.join(message, ","));
+        this.exceptionMessage = String.format(template, message);
     }
 
     public BaseException(Throwable cause) {
         super(cause);
+        this.exceptionMessage = error.getErrorMessage();
     }
 
 
     public BaseException(CommonError error) {
         super(error.getErrorMessage());
         this.error = error;
+        this.exceptionMessage = error.getErrorMessage();
     }
 
     public BaseException(CommonError error, Object... message) {
         super(error.getErrorMessage() + " | " + StringUtils.join(message, ","));
         this.error = error;
+        this.exceptionMessage = String.format(error.getErrorMessage(), message);
     }
 
     public BaseException(String message, Throwable cause, CommonError error) {
         super(message, cause);
         this.error = error;
+        this.exceptionMessage = error.getErrorMessage();
     }
 
     public BaseException(Throwable cause, CommonError error) {
         super(cause);
         this.error = error;
+        this.exceptionMessage = error.getErrorMessage();
     }
 
     public CommonError getError() {
         return error;
+    }
+
+    public String getExceptionMessage() {
+        return exceptionMessage;
     }
 }
